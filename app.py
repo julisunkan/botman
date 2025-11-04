@@ -236,6 +236,10 @@ def add_command_route(bot_id):
     if not command or not response_content:
         return jsonify({'success': False, 'message': 'Command and response are required'}), 400
     
+    # Replace BOT_ID placeholder with actual bot_id
+    if url_link:
+        url_link = url_link.replace('BOT_ID', str(bot_id))
+    
     command_id = add_command(bot_id, command, response_type, response_content, url_link, button_text)
     return jsonify({'success': True, 'message': 'Command added successfully', 'command_id': command_id})
 
@@ -251,6 +255,10 @@ def update_command_route(bot_id):
     response_content = request.form.get('response_content', '').strip()
     url_link = request.form.get('url_link', '').strip()
     button_text = request.form.get('button_text', '').strip()
+    
+    # Replace BOT_ID placeholder with actual bot_id
+    if url_link:
+        url_link = url_link.replace('BOT_ID', str(bot_id))
     
     update_command(command_id, response_type, response_content, url_link, button_text)
     return jsonify({'success': True, 'message': 'Command updated successfully'})
