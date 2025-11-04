@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - BotForge Pro{% endblock %}
+
+{% block content %}
+<div class="dashboard-header mb-4">
+    <h1><i class="fas fa-th-large"></i> My Bots</h1>
+    <a href="{{ url_for('create_bot_route') }}" class="btn btn-gradient">
+        <i class="fas fa-plus-circle"></i> Create New Bot
+    </a>
+</div>
+
+{% if bot_stats %}
+<div class="row g-4">
+    {% for item in bot_stats %}
+    <div class="col-md-6 col-lg-4">
+        <div class="bot-card">
+            <div class="bot-card-header">
+                <h3>
+                    <i class="fas fa-robot"></i> {{ item.bot.bot_name }}
+                </h3>
+                {% if item.bot.ai_enabled %}
+                <span class="badge bg-success"><i class="fas fa-brain"></i> AI</span>
+                {% endif %}
+            </div>
+            
+            <div class="bot-card-body">
+                <p class="text-muted">@{{ item.bot.bot_username }}</p>
+                {% if item.bot.description %}
+                <p>{{ item.bot.description[:100] }}{% if item.bot.description|length > 100 %}...{% endif %}</p>
+                {% endif %}
+                
+                <div class="bot-stats mt-3">
+                    <div class="stat">
+                        <i class="fas fa-envelope"></i>
+                        <span>{{ item.stats.total_messages }}</span>
+                        <small>Messages</small>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-users"></i>
+                        <span>{{ item.stats.unique_users }}</span>
+                        <small>Users</small>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-terminal"></i>
+                        <span>{{ item.stats.command_stats|length }}</span>
+                        <small>Commands</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bot-card-footer">
+                <a href="{{ url_for('bot_detail', bot_id=item.bot.id) }}" class="btn btn-sm btn-outline-light">
+                    <i class="fas fa-cog"></i> Manage
+                </a>
+                <button class="btn btn-sm btn-outline-danger" onclick="deleteBot({{ item.bot.id }})">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <i class="fas fa-robot fa-5x mb-4 text-muted"></i>
+    <h3>No Bots Yet</h3>
+    <p>Create your first Telegram bot to get started!</p>
+    <a href="{{ url_for('create_bot_route') }}" class="btn btn-gradient btn-lg mt-3">
+        <i class="fas fa-plus-circle"></i> Create Your First Bot
+    </a>
+</div>
+{% endif %}
+
+<script>
+async function deleteBot(botId) {
+    if (!confirm('Are you sure you want to delete this bot? This action cannot be undone.')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/bot/${botId}/delete`, {
+            method: 'POST'
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification('Bot deleted successfully', 'success');
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showNotification(data.message, 'error');
+        }
+    } catch (error) {
+        showNotification('An error occurred', 'error');
+    }
+}
+</script>
+{% endblock %}

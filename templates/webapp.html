@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ bot.bot_name }} - Mini App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, {{ mining_settings.primary_color if mining_settings else '#9333ea' }}, {{ mining_settings.secondary_color if mining_settings else '#ec4899' }});
+            color: {{ mining_settings.text_color if mining_settings else '#ffffff' }};
+            min-height: 100vh;
+            padding: 20px;
+            user-select: none;
+        }
+        .container { max-width: 500px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .coin-display {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .coin-symbol { font-size: 36px; }
+        .tap-area {
+            text-align: center;
+            margin: 40px 0;
+        }
+        .tap-button {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border: none;
+            font-size: 80px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+        .tap-button:active {
+            transform: scale(0.95);
+        }
+        .energy-bar {
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            height: 30px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .energy-fill {
+            background: linear-gradient(90deg, #10b981, #059669);
+            height: 100%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            overflow-x: auto;
+        }
+        .tab {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            font-size: 12px;
+            backdrop-filter: blur(10px);
+        }
+        .tab.active {
+            background: rgba(255,255,255,0.3);
+        }
+        .tab-content {
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 20px;
+            backdrop-filter: blur(10px);
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .shop-item, .task-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        .btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{ mining_settings.coin_name if mining_settings else 'Coin' }} Miner</h1>
+            <div class="coin-display">
+                <span class="coin-symbol">{{ mining_settings.coin_symbol if mining_settings else '💎' }}</span>
+                <span id="coinBalance">0</span>
+            </div>
+        </div>
+        
+        <div class="tap-area">
+            <button class="tap-button" id="tapButton" onclick="tap()">
+                {{ mining_settings.coin_symbol if mining_settings else '💎' }}
+            </button>
+        </div>
+        
+        <div class="energy-bar">
+            <div class="energy-fill" id="energyFill">
+                <span id="energyText">1000/1000</span>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div style="font-size:12px;opacity:0.7">Total Taps</div>
+                <div style="font-size:24px;font-weight:bold" id="totalTaps">0</div>
+            </div>
+            <div class="stat-card">
+                <div style="font-size:12px;opacity:0.7">Level</div>
+                <div style="font-size:24px;font-weight:bold" id="level">1</div>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('mine')">⛏ Mine</button>
+            <button class="tab" onclick="showTab('shop')">🛒 Shop</button>
+            <button class="tab" onclick="showTab('tasks')">📋 Tasks</button>
+        </div>
+        
+        <div class="tab-content active" id="tab-mine">
+            <h3 style="margin-bottom:15px">Mining Stats</h3>
+            <p>Tap the coin to earn!</p>
+            <p style="margin-top:10px;opacity:0.7;font-size:14px">Energy recharges automatically</p>
+        </div>
+        
+        <div class="tab-content" id="tab-shop">
+            <h3 style="margin-bottom:15px">Shop</h3>
+            {% if shop_items %}
+                {% for item in shop_items %}
+                <div class="shop-item">
+                    <h4>{{ item.item_name }}</h4>
+                    <p style="font-size:14px;opacity:0.8">{{ item.item_description }}</p>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+                        <strong>{{ item.price }} {{ item.currency }}</strong>
+                        <button class="btn">Buy</button>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No items available yet</p>
+            {% endif %}
+        </div>
+        
+        <div class="tab-content" id="tab-tasks">
+            <h3 style="margin-bottom:15px">Tasks</h3>
+            {% if tasks %}
+                {% for task in tasks %}
+                <div class="task-item">
+                    <h4>{{ task.task_name }}</h4>
+                    <p style="font-size:14px;opacity:0.8">{{ task.task_description }}</p>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+                        <span style="color:#10b981;font-weight:bold">+{{ task.reward_amount }} {{ task.reward_type }}</span>
+                        <button class="btn">Complete</button>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No tasks available yet</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <script>
+        const botId = {{ bot.id }};
+        const telegramUserId = {{ telegram_user_id }};
+        const maxEnergy = {{ mining_settings.max_energy if mining_settings else 1000 }};
+        let coinBalance = 0;
+        let energy = maxEnergy;
+        let totalTaps = 0;
+        let level = 1;
+        
+        async function loadProgress() {
+            try {
+                const response = await fetch(`/bot/${botId}/get-progress?user_id=${telegramUserId}`);
+                const data = await response.json();
+                if (data.success) {
+                    coinBalance = data.coin_balance;
+                    energy = data.energy;
+                    totalTaps = data.total_taps;
+                    level = data.level;
+                    updateUI();
+                }
+            } catch (error) {
+                console.error('Error loading progress:', error);
+            }
+        }
+        
+        async function tap() {
+            if (energy <= 0) return;
+            
+            try {
+                const response = await fetch(`/bot/${botId}/tap`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ telegram_user_id: telegramUserId })
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    coinBalance = data.coin_balance;
+                    energy = data.energy;
+                    totalTaps = data.total_taps;
+                    updateUI();
+                    
+                    const btn = document.getElementById('tapButton');
+                    btn.style.transform = 'scale(0.95)';
+                    setTimeout(() => btn.style.transform = 'scale(1)', 100);
+                }
+            } catch (error) {
+                console.error('Error tapping:', error);
+            }
+        }
+        
+        function updateUI() {
+            document.getElementById('coinBalance').textContent = coinBalance.toLocaleString();
+            document.getElementById('totalTaps').textContent = totalTaps.toLocaleString();
+            document.getElementById('level').textContent = level;
+            
+            const energyPercent = (energy / maxEnergy) * 100;
+            document.getElementById('energyFill').style.width = energyPercent + '%';
+            document.getElementById('energyText').textContent = energy + '/' + maxEnergy;
+        }
+        
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
+        }
+        
+        loadProgress();
+        setInterval(loadProgress, 10000);
+    </script>
+</body>
+</html>

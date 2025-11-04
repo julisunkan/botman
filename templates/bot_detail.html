@@ -1,0 +1,462 @@
+{% extends "base.html" %}
+
+{% block title %}{{ bot.bot_name }} - BotForge Pro{% endblock %}
+
+{% block content %}
+<div class="bot-detail-header mb-4">
+    <div>
+        <h1><i class="fas fa-robot"></i> {{ bot.bot_name }}</h1>
+        <p class="text-muted">@{{ bot.bot_username }}</p>
+    </div>
+    <div>
+        <button class="btn btn-success" onclick="setupWebhook({{ bot.id }})">
+            <i class="fas fa-link"></i> Setup Webhook
+        </button>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+    </div>
+</div>
+
+<ul class="nav nav-tabs mb-4" id="botTabs" role="tablist">
+    <li class="nav-item">
+        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#overview">
+            <i class="fas fa-chart-line"></i> Overview
+        </button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#commands">
+            <i class="fas fa-terminal"></i> Commands
+        </button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#ai-settings">
+            <i class="fas fa-brain"></i> AI Settings
+        </button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#mining">
+            <i class="fas fa-gamepad"></i> Mining Game
+        </button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#shop">
+            <i class="fas fa-shopping-cart"></i> Shop
+        </button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tasks">
+            <i class="fas fa-tasks"></i> Tasks
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade show active" id="overview">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <i class="fas fa-envelope fa-2x"></i>
+                    <h3>{{ analytics.total_messages }}</h3>
+                    <p>Total Messages</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <i class="fas fa-users fa-2x"></i>
+                    <h3>{{ analytics.unique_users }}</h3>
+                    <p>Unique Users</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <i class="fas fa-terminal fa-2x"></i>
+                    <h3>{{ commands|length }}</h3>
+                    <p>Commands</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-glass mt-4">
+            <h4><i class="fas fa-info-circle"></i> Bot Information</h4>
+            <table class="table table-dark table-borderless mt-3">
+                <tr>
+                    <td><strong>Bot Name:</strong></td>
+                    <td>{{ bot.bot_name }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Username:</strong></td>
+                    <td>@{{ bot.bot_username }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Webhook:</strong></td>
+                    <td>{{ bot.webhook_url or 'Not set' }}</td>
+                </tr>
+                <tr>
+                    <td><strong>AI Enabled:</strong></td>
+                    <td>{% if bot.ai_enabled %}<span class="badge bg-success">Yes</span>{% else %}<span class="badge bg-secondary">No</span>{% endif %}</td>
+                </tr>
+                <tr>
+                    <td><strong>Created:</strong></td>
+                    <td>{{ bot.created_at }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
+    <div class="tab-pane fade" id="commands">
+        <div class="card-glass mb-4">
+            <h4><i class="fas fa-plus-circle"></i> Add New Command</h4>
+            <form id="addCommandForm" class="mt-3">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" name="command" placeholder="Command (e.g., start)" required>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" name="response_type" id="responseType">
+                            <option value="text">Text</option>
+                            <option value="photo">Photo</option>
+                            <option value="url_button">URL Button</option>
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <textarea class="form-control" name="response_content" placeholder="Response content..." required></textarea>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="fas fa-plus"></i> Add
+                        </button>
+                    </div>
+                </div>
+                <div class="row g-3 mt-2" id="urlButtonFields" style="display: none;">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" name="button_text" placeholder="Button Text">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="url" class="form-control" name="url_link" placeholder="URL">
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <div class="card-glass">
+            <h4><i class="fas fa-list"></i> Existing Commands</h4>
+            <div class="table-responsive mt-3">
+                <table class="table table-dark table-hover">
+                    <thead>
+                        <tr>
+                            <th>Command</th>
+                            <th>Type</th>
+                            <th>Response</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cmd in commands %}
+                        <tr>
+                            <td>/{{ cmd.command }}</td>
+                            <td><span class="badge bg-info">{{ cmd.response_type }}</span></td>
+                            <td>{{ cmd.response_content[:50] }}{% if cmd.response_content|length > 50 %}...{% endif %}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteCommand({{ cmd.id }})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tab-pane fade" id="ai-settings">
+        <div class="card-glass">
+            <h4><i class="fas fa-brain"></i> AI Settings</h4>
+            <form id="aiSettingsForm" class="mt-3">
+                <div class="mb-3">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="aiEnabled" {% if bot.ai_enabled %}checked{% endif %}>
+                        <label class="form-check-label" for="aiEnabled">
+                            Enable AI Responses (Google Gemini)
+                        </label>
+                    </div>
+                </div>
+                <div class="mb-3" id="geminiKeyField" style="{% if not bot.ai_enabled %}display:none{% endif %}">
+                    <label class="form-label">Gemini API Key</label>
+                    <input type="text" class="form-control" name="gemini_key" placeholder="Enter your Gemini API key">
+                    <small class="form-text text-muted">Get your API key from Google AI Studio</small>
+                </div>
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save"></i> Save AI Settings
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="tab-pane fade" id="mining">
+        <div class="card-glass">
+            <h4><i class="fas fa-gamepad"></i> Mining Game Configuration</h4>
+            <form id="miningSettingsForm" class="mt-3">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Coin Name</label>
+                        <input type="text" class="form-control" name="coin_name" value="{{ mining_settings.coin_name if mining_settings else 'Coin' }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Coin Symbol</label>
+                        <input type="text" class="form-control" name="coin_symbol" value="{{ mining_settings.coin_symbol if mining_settings else '💎' }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Initial Balance</label>
+                        <input type="number" class="form-control" name="initial_balance" value="{{ mining_settings.initial_balance if mining_settings else 0 }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Tap Reward</label>
+                        <input type="number" class="form-control" name="tap_reward" value="{{ mining_settings.tap_reward if mining_settings else 1 }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Max Energy</label>
+                        <input type="number" class="form-control" name="max_energy" value="{{ mining_settings.max_energy if mining_settings else 1000 }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Energy Recharge Rate (per min)</label>
+                        <input type="number" class="form-control" name="energy_recharge_rate" value="{{ mining_settings.energy_recharge_rate if mining_settings else 1 }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Primary Color</label>
+                        <input type="color" class="form-control" name="primary_color" value="{{ mining_settings.primary_color if mining_settings else '#9333ea' }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Secondary Color</label>
+                        <input type="color" class="form-control" name="secondary_color" value="{{ mining_settings.secondary_color if mining_settings else '#ec4899' }}">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success mt-3">
+                    <i class="fas fa-save"></i> Save Mining Settings
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="tab-pane fade" id="shop">
+        <div class="card-glass mb-4">
+            <h4><i class="fas fa-plus-circle"></i> Add Shop Item</h4>
+            <form id="addShopItemForm" class="mt-3">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" name="item_name" placeholder="Item Name" required>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="number" class="form-control" name="price" placeholder="Price" required>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-select" name="currency">
+                            <option value="coins">Coins</option>
+                            <option value="TON">TON</option>
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <textarea class="form-control" name="item_description" placeholder="Description..."></textarea>
+                    </div>
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-plus"></i> Add Item
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <div class="card-glass">
+            <h4><i class="fas fa-shopping-cart"></i> Shop Items</h4>
+            <div class="row g-3 mt-2">
+                {% for item in shop_items %}
+                <div class="col-md-6">
+                    <div class="shop-item-card">
+                        <h5>{{ item.item_name }}</h5>
+                        <p>{{ item.item_description }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong>{{ item.price }} {{ item.currency }}</strong>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteShopItem({{ item.id }})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="tab-pane fade" id="tasks">
+        <div class="card-glass mb-4">
+            <h4><i class="fas fa-plus-circle"></i> Add Task</h4>
+            <form id="addTaskForm" class="mt-3">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" name="task_name" placeholder="Task Name" required>
+                    </div>
+                    <div class="col-md-6">
+                        <select class="form-select" name="task_type">
+                            <option value="telegram">Telegram</option>
+                            <option value="social">Social</option>
+                            <option value="referral">Referral</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="number" class="form-control" name="reward_amount" placeholder="Reward Amount" required>
+                    </div>
+                    <div class="col-md-6">
+                        <select class="form-select" name="reward_type">
+                            <option value="coins">Coins</option>
+                            <option value="energy">Energy</option>
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <input type="text" class="form-control" name="requirement_value" placeholder="Requirement (e.g., channel URL)">
+                    </div>
+                    <div class="col-md-12">
+                        <textarea class="form-control" name="task_description" placeholder="Task Description..."></textarea>
+                    </div>
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-plus"></i> Add Task
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <div class="card-glass">
+            <h4><i class="fas fa-tasks"></i> Active Tasks</h4>
+            <div class="row g-3 mt-2">
+                {% for task in tasks %}
+                <div class="col-md-6">
+                    <div class="task-card">
+                        <h5>{{ task.task_name }}</h5>
+                        <p>{{ task.task_description }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="badge bg-success">+{{ task.reward_amount }} {{ task.reward_type }}</span>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteTask({{ task.id }})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const botId = {{ bot.id }};
+
+document.getElementById('responseType').addEventListener('change', (e) => {
+    document.getElementById('urlButtonFields').style.display = e.target.value === 'url_button' ? 'block' : 'none';
+});
+
+document.getElementById('aiEnabled').addEventListener('change', (e) => {
+    document.getElementById('geminiKeyField').style.display = e.target.checked ? 'block' : 'none';
+});
+
+document.getElementById('addCommandForm').addEventListener('submit', handleFormSubmit(`/bot/${botId}/add-command`, 'Command added'));
+document.getElementById('aiSettingsForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    formData.append('enabled', document.getElementById('aiEnabled').checked);
+    
+    try {
+        const response = await fetch(`/bot/${botId}/toggle-ai`, { method: 'POST', body: formData });
+        const data = await response.json();
+        showNotification(data.message, data.success ? 'success' : 'error');
+    } catch (error) {
+        showNotification('An error occurred', 'error');
+    }
+});
+
+document.getElementById('miningSettingsForm').addEventListener('submit', handleFormSubmit(`/bot/${botId}/save-mining-settings`, 'Mining settings saved'));
+document.getElementById('addShopItemForm').addEventListener('submit', handleFormSubmit(`/bot/${botId}/add-shop-item`, 'Shop item added'));
+document.getElementById('addTaskForm').addEventListener('submit', handleFormSubmit(`/bot/${botId}/add-task`, 'Task added'));
+
+function handleFormSubmit(url, successMsg) {
+    return async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        
+        try {
+            const response = await fetch(url, { method: 'POST', body: formData });
+            const data = await response.json();
+            
+            if (data.success) {
+                showNotification(successMsg, 'success');
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                showNotification(data.message, 'error');
+            }
+        } catch (error) {
+            showNotification('An error occurred', 'error');
+        }
+    };
+}
+
+async function setupWebhook(botId) {
+    try {
+        const response = await fetch(`/bot/${botId}/setup-webhook`, { method: 'POST' });
+        const data = await response.json();
+        showNotification(data.message, data.success ? 'success' : 'error');
+    } catch (error) {
+        showNotification('An error occurred', 'error');
+    }
+}
+
+async function deleteCommand(cmdId) {
+    if (!confirm('Delete this command?')) return;
+    try {
+        const formData = new FormData();
+        formData.append('command_id', cmdId);
+        const response = await fetch(`/bot/${botId}/delete-command`, { method: 'POST', body: formData });
+        const data = await response.json();
+        if (data.success) {
+            showNotification('Command deleted', 'success');
+            setTimeout(() => location.reload(), 1000);
+        }
+    } catch (error) {
+        showNotification('An error occurred', 'error');
+    }
+}
+
+async function deleteShopItem(itemId) {
+    if (!confirm('Delete this item?')) return;
+    try {
+        const formData = new FormData();
+        formData.append('item_id', itemId);
+        const response = await fetch(`/bot/${botId}/delete-shop-item`, { method: 'POST', body: formData });
+        const data = await response.json();
+        if (data.success) {
+            showNotification('Item deleted', 'success');
+            setTimeout(() => location.reload(), 1000);
+        }
+    } catch (error) {
+        showNotification('An error occurred', 'error');
+    }
+}
+
+async function deleteTask(taskId) {
+    if (!confirm('Delete this task?')) return;
+    try {
+        const formData = new FormData();
+        formData.append('task_id', taskId);
+        const response = await fetch(`/bot/${botId}/delete-task`, { method: 'POST', body: formData });
+        const data = await response.json();
+        if (data.success) {
+            showNotification('Task deleted', 'success');
+            setTimeout(() => location.reload(), 1000);
+        }
+    } catch (error) {
+        showNotification('An error occurred', 'error');
+    }
+}
+</script>
+{% endblock %}

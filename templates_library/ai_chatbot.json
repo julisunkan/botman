@@ -1,0 +1,22 @@
+{
+  "name": "AI Chatbot",
+  "description": "Intelligent conversational bot powered by Google Gemini",
+  "category": "AI",
+  "commands": [
+    {
+      "command": "start",
+      "response_type": "text",
+      "response_content": "👋 Hello! I'm an AI-powered chatbot. Ask me anything!"
+    },
+    {
+      "command": "help",
+      "response_type": "text",
+      "response_content": "I'm here to help! Just send me any message and I'll respond using advanced AI."
+    },
+    {
+      "command": "about",
+      "response_type": "text",
+      "response_content": "I'm powered by Google Gemini AI, capable of understanding and responding to natural language."
+    }
+  ]
+}

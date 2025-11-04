@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Create Bot - BotForge Pro{% endblock %}
+
+{% block content %}
+<div class="create-bot-container">
+    <div class="card-glass">
+        <h2 class="mb-4"><i class="fas fa-plus-circle"></i> Create New Bot</h2>
+        
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> 
+            <strong>How to get your bot token:</strong><br>
+            1. Open Telegram and search for @BotFather<br>
+            2. Send /newbot and follow the instructions<br>
+            3. Copy the token provided by BotFather and paste it below
+        </div>
+        
+        <form id="createBotForm" method="POST" action="{{ url_for('create_bot_route') }}">
+            <div class="mb-3">
+                <label class="form-label">
+                    <i class="fas fa-robot"></i> Bot Name
+                </label>
+                <input type="text" class="form-control" name="bot_name" required placeholder="My Awesome Bot">
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">
+                    <i class="fas fa-key"></i> Bot Token
+                </label>
+                <input type="text" class="form-control" name="bot_token" required placeholder="123456789:ABCdefGHIjklMNOpqrsTUVwxyz">
+                <small class="form-text text-muted">Get this from @BotFather on Telegram</small>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">
+                    <i class="fas fa-align-left"></i> Description (Optional)
+                </label>
+                <textarea class="form-control" name="description" rows="3" placeholder="Describe your bot's purpose..."></textarea>
+            </div>
+            
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-gradient">
+                    <i class="fas fa-save"></i> Create Bot
+                </button>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.getElementById('createBotForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
+    
+    try {
+        const response = await fetch(e.target.action, {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification('Bot created successfully!', 'success');
+            setTimeout(() => window.location.href = data.redirect, 1000);
+        } else {
+            showNotification(data.message, 'error');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-save"></i> Create Bot';
+        }
+    } catch (error) {
+        showNotification('An error occurred. Please try again.', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-save"></i> Create Bot';
+    }
+});
+</script>
+{% endblock %}

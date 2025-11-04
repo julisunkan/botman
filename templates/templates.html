@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block title %}Templates - BotForge Pro{% endblock %}
+
+{% block content %}
+<div class="templates-header mb-4">
+    <h1><i class="fas fa-store"></i> Template Library</h1>
+    <p class="lead">Quick start your bot with pre-built templates</p>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6 col-lg-4">
+        <div class="template-card">
+            <div class="template-icon">
+                <i class="fas fa-brain fa-3x"></i>
+            </div>
+            <h3>AI Chatbot</h3>
+            <p>Intelligent conversational bot powered by Google Gemini AI</p>
+            <ul class="template-features">
+                <li><i class="fas fa-check"></i> Natural language processing</li>
+                <li><i class="fas fa-check"></i> Context-aware responses</li>
+                <li><i class="fas fa-check"></i> Multi-language support</li>
+            </ul>
+            <button class="btn btn-gradient w-100 mt-3" onclick="showImportModal('ai_chatbot')">
+                <i class="fas fa-download"></i> Use Template
+            </button>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-lg-4">
+        <div class="template-card">
+            <div class="template-icon">
+                <i class="fas fa-gamepad fa-3x"></i>
+            </div>
+            <h3>Tap-to-Earn Mining</h3>
+            <p>Complete tap-to-earn mining game with energy system</p>
+            <ul class="template-features">
+                <li><i class="fas fa-check"></i> Tap mechanics</li>
+                <li><i class="fas fa-check"></i> Energy system</li>
+                <li><i class="fas fa-check"></i> Leaderboard ready</li>
+            </ul>
+            <button class="btn btn-gradient w-100 mt-3" onclick="showImportModal('coin_mining')">
+                <i class="fas fa-download"></i> Use Template
+            </button>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-lg-4">
+        <div class="template-card">
+            <div class="template-icon">
+                <i class="fas fa-wallet fa-3x"></i>
+            </div>
+            <h3>Payment Bot</h3>
+            <p>Accept payments via TON blockchain integration</p>
+            <ul class="template-features">
+                <li><i class="fas fa-check"></i> TON wallet integration</li>
+                <li><i class="fas fa-check"></i> Payment processing</li>
+                <li><i class="fas fa-check"></i> Transaction tracking</li>
+            </ul>
+            <button class="btn btn-gradient w-100 mt-3" onclick="showImportModal('payment')">
+                <i class="fas fa-download"></i> Use Template
+            </button>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-lg-4">
+        <div class="template-card">
+            <div class="template-icon">
+                <i class="fas fa-image fa-3x"></i>
+            </div>
+            <h3>NFT Verification</h3>
+            <p>Verify NFT ownership and grant exclusive access</p>
+            <ul class="template-features">
+                <li><i class="fas fa-check"></i> NFT verification</li>
+                <li><i class="fas fa-check"></i> Access control</li>
+                <li><i class="fas fa-check"></i> Community features</li>
+            </ul>
+            <button class="btn btn-gradient w-100 mt-3" onclick="showImportModal('nft_verification')">
+                <i class="fas fa-download"></i> Use Template
+            </button>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-lg-4">
+        <div class="template-card">
+            <div class="template-icon">
+                <i class="fas fa-users fa-3x"></i>
+            </div>
+            <h3>Referral System</h3>
+            <p>Grow your community with referral rewards</p>
+            <ul class="template-features">
+                <li><i class="fas fa-check"></i> Referral tracking</li>
+                <li><i class="fas fa-check"></i> Reward distribution</li>
+                <li><i class="fas fa-check"></i> Leaderboard system</li>
+            </ul>
+            <button class="btn btn-gradient w-100 mt-3" onclick="showImportModal('referral_system')">
+                <i class="fas fa-download"></i> Use Template
+            </button>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-lg-4">
+        <div class="template-card">
+            <div class="template-icon">
+                <i class="fas fa-gift fa-3x"></i>
+            </div>
+            <h3>Airdrop Manager</h3>
+            <p>Distribute tokens and rewards to your community</p>
+            <ul class="template-features">
+                <li><i class="fas fa-check"></i> Airdrop campaigns</li>
+                <li><i class="fas fa-check"></i> User eligibility</li>
+                <li><i class="fas fa-check"></i> Distribution tracking</li>
+            </ul>
+            <button class="btn btn-gradient w-100 mt-3" onclick="showImportModal('airdrop_manager')">
+                <i class="fas fa-download"></i> Use Template
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="importModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <h5 class="modal-title">Import Template</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Select a bot to import this template into:</p>
+                <select class="form-select" id="selectBot">
+                    <option value="">-- Select Bot --</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-gradient" onclick="importTemplate()">Import</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let selectedTemplate = '';
+
+async function loadUserBots() {
+    return [];
+}
+
+function showImportModal(templateId) {
+    selectedTemplate = templateId;
+    const modal = new bootstrap.Modal(document.getElementById('importModal'));
+    modal.show();
+}
+
+async function importTemplate() {
+    const botId = document.getElementById('selectBot').value;
+    if (!botId) {
+        showNotification('Please select a bot', 'error');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('template_id', selectedTemplate);
+    formData.append('bot_id', botId);
+    
+    try {
+        const response = await fetch('/import-template', {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification('Template imported successfully!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('importModal')).hide();
+        } else {
+            showNotification(data.message, 'error');
+        }
+    } catch (error) {
+        showNotification('An error occurred', 'error');
+    }
+}
+</script>
+{% endblock %}

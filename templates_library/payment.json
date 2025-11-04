@@ -1,0 +1,22 @@
+{
+  "name": "Payment Bot",
+  "description": "Accept payments via TON blockchain",
+  "category": "Payment",
+  "commands": [
+    {
+      "command": "start",
+      "response_type": "text",
+      "response_content": "💳 Welcome! I can process payments via TON blockchain.\n\nUse /buy to make a purchase."
+    },
+    {
+      "command": "buy",
+      "response_type": "text",
+      "response_content": "🛒 Select a product:\n1. Premium Access - 5 TON\n2. VIP Status - 10 TON\n3. Lifetime Membership - 50 TON"
+    },
+    {
+      "command": "wallet",
+      "response_type": "text",
+      "response_content": "👛 Connect your TON wallet to get started!"
+    }
+  ]
+}

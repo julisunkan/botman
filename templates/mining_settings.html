@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}Mining Settings - {{ bot.bot_name }} - BotForge Pro{% endblock %}
+
+{% block content %}
+<div class="mining-settings-container">
+    <div class="settings-header mb-4">
+        <h1><i class="fas fa-gamepad"></i> Mining Game Settings</h1>
+        <p class="text-muted">Configure your tap-to-earn mining game</p>
+    </div>
+    
+    <div class="card-glass mb-4">
+        <h4><i class="fas fa-cog"></i> Game Configuration</h4>
+        <form id="miningSettingsForm" method="POST" action="{{ url_for('save_mining_settings_route', bot_id=bot.id) }}">
+            <div class="row g-3 mt-3">
+                <div class="col-md-6">
+                    <label class="form-label"><i class="fas fa-coins"></i> Coin Name</label>
+                    <input type="text" class="form-control" name="coin_name" 
+                           value="{{ mining_settings.coin_name if mining_settings else 'Coin' }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label"><i class="fas fa-gem"></i> Coin Symbol (Emoji)</label>
+                    <input type="text" class="form-control" name="coin_symbol" 
+                           value="{{ mining_settings.coin_symbol if mining_settings else '💎' }}" required>
+                </div>
+                
+                <div class="col-md-4">
+                    <label class="form-label"><i class="fas fa-wallet"></i> Initial Balance</label>
+                    <input type="number" class="form-control" name="initial_balance" 
+                           value="{{ mining_settings.initial_balance if mining_settings else 0 }}" min="0" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label"><i class="fas fa-hand-pointer"></i> Tap Reward</label>
+                    <input type="number" class="form-control" name="tap_reward" 
+                           value="{{ mining_settings.tap_reward if mining_settings else 1 }}" min="1" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label"><i class="fas fa-battery-full"></i> Max Energy</label>
+                    <input type="number" class="form-control" name="max_energy" 
+                           value="{{ mining_settings.max_energy if mining_settings else 1000 }}" min="100" required>
+                </div>
+                
+                <div class="col-md-12">
+                    <label class="form-label"><i class="fas fa-bolt"></i> Energy Recharge Rate (per minute)</label>
+                    <input type="number" class="form-control" name="energy_recharge_rate" 
+                           value="{{ mining_settings.energy_recharge_rate if mining_settings else 1 }}" min="1" required>
+                </div>
+                
+                <div class="col-12 mt-4">
+                    <h5><i class="fas fa-palette"></i> Theme Colors</h5>
+                    <hr style="opacity: 0.1">
+                </div>
+                
+                <div class="col-md-3">
+                    <label class="form-label">Primary Color</label>
+                    <input type="color" class="form-control" name="primary_color" 
+                           value="{{ mining_settings.primary_color if mining_settings else '#9333ea' }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Secondary Color</label>
+                    <input type="color" class="form-control" name="secondary_color" 
+                           value="{{ mining_settings.secondary_color if mining_settings else '#ec4899' }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Text Color</label>
+                    <input type="color" class="form-control" name="text_color" 
+                           value="{{ mining_settings.text_color if mining_settings else '#ffffff' }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Background Color</label>
+                    <input type="color" class="form-control" name="background_color" 
+                           value="{{ mining_settings.background_color if mining_settings else '#1a1a2e' }}">
+                </div>
+                
+                <div class="col-md-12">
+                    <label class="form-label"><i class="fas fa-image"></i> Background Image URL (Optional)</label>
+                    <input type="url" class="form-control" name="background_image_url" 
+                           value="{{ mining_settings.background_image_url if mining_settings else '' }}" 
+                           placeholder="https://example.com/image.jpg">
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-gradient">
+                    <i class="fas fa-save"></i> Save Settings
+                </button>
+                <a href="{{ url_for('bot_detail', bot_id=bot.id) }}" class="btn btn-outline-light">
+                    <i class="fas fa-arrow-left"></i> Back to Bot
+                </a>
+            </div>
+        </form>
+    </div>
+    
+    <div class="card-glass">
+        <h4><i class="fas fa-eye"></i> Preview</h4>
+        <p class="text-muted">This is how your mini-app will look</p>
+        <div id="preview" class="mt-3 p-4 rounded" style="background: linear-gradient(135deg, 
+             {{ mining_settings.primary_color if mining_settings else '#9333ea' }}, 
+             {{ mining_settings.secondary_color if mining_settings else '#ec4899' }});
+             color: {{ mining_settings.text_color if mining_settings else '#ffffff' }};
+             text-align: center;">
+            <h3>{{ mining_settings.coin_name if mining_settings else 'Coin' }} Miner</h3>
+            <div style="font-size: 60px; margin: 20px 0;">
+                {{ mining_settings.coin_symbol if mining_settings else '💎' }}
+            </div>
+            <p>Tap the coin to earn!</p>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('miningSettingsForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    
+    try {
+        const response = await fetch(e.target.action, {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification('Mining settings saved successfully!', 'success');
+            setTimeout(() => window.location.href = '{{ url_for("bot_detail", bot_id=bot.id) }}', 1000);
+        } else {
+            showNotification(data.message || 'Failed to save settings', 'error');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-save"></i> Save Settings';
+        }
+    } catch (error) {
+        showNotification('An error occurred. Please try again.', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-save"></i> Save Settings';
+    }
+});
+
+const form = document.getElementById('miningSettingsForm');
+['coin_name', 'coin_symbol', 'primary_color', 'secondary_color', 'text_color'].forEach(field => {
+    const input = form.querySelector(`[name="${field}"]`);
+    if (input) {
+        input.addEventListener('input', updatePreview);
+    }
+});
+
+function updatePreview() {
+    const coinName = form.querySelector('[name="coin_name"]').value;
+    const coinSymbol = form.querySelector('[name="coin_symbol"]').value;
+    const primaryColor = form.querySelector('[name="primary_color"]').value;
+    const secondaryColor = form.querySelector('[name="secondary_color"]').value;
+    const textColor = form.querySelector('[name="text_color"]').value;
+    
+    const preview = document.getElementById('preview');
+    preview.style.background = `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`;
+    preview.style.color = textColor;
+    preview.querySelector('h3').textContent = `${coinName} Miner`;
+    preview.querySelector('div').textContent = coinSymbol;
+}
+</script>
+{% endblock %}

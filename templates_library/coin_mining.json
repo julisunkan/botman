@@ -1,0 +1,34 @@
+{
+  "name": "Tap-to-Earn Mining",
+  "description": "Complete mining game with tap mechanics",
+  "category": "Game",
+  "commands": [
+    {
+      "command": "start",
+      "response_type": "text",
+      "response_content": "⛏️ Welcome to the mining game! Tap to earn coins and climb the leaderboard!"
+    },
+    {
+      "command": "webapp",
+      "response_type": "text",
+      "response_content": "🎮 Click below to start mining!"
+    },
+    {
+      "command": "stats",
+      "response_type": "text",
+      "response_content": "📊 Your mining stats:\n💎 Coins: Loading...\n⚡ Energy: Loading...\n👆 Total taps: Loading..."
+    }
+  ],
+  "mining_settings": {
+    "coin_name": "MinerCoin",
+    "coin_symbol": "⛏️",
+    "initial_balance": 100,
+    "tap_reward": 1,
+    "max_energy": 1000,
+    "energy_recharge_rate": 1,
+    "primary_color": "#9333ea",
+    "secondary_color": "#ec4899",
+    "text_color": "#ffffff",
+    "background_color": "#1a1a2e"
+  }
+}

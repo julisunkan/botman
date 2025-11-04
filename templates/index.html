@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero-section text-center">
+    <div class="hero-content">
+        <h1 class="display-1 fw-bold mb-4">
+            <i class="fas fa-robot"></i> BotForge Pro
+        </h1>
+        <p class="lead mb-5">Create powerful Telegram bots with AI, mining games, and payment integration</p>
+        <div class="d-flex gap-3 justify-content-center">
+            <a href="{{ url_for('register') }}" class="btn btn-gradient btn-lg">
+                <i class="fas fa-user-plus"></i> Get Started
+            </a>
+            <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+        </div>
+    </div>
+    
+    <div class="features mt-5 pt-5">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="fas fa-brain fa-3x mb-3"></i>
+                    <h3>AI Integration</h3>
+                    <p>Powered by Google Gemini for intelligent conversations</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="fas fa-gamepad fa-3x mb-3"></i>
+                    <h3>Tap-to-Earn Games</h3>
+                    <p>Create engaging mining games with rewards</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="fas fa-wallet fa-3x mb-3"></i>
+                    <h3>TON Payments</h3>
+                    <p>Accept payments via TON blockchain</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

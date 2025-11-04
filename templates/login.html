@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}{% if register_mode %}Register{% else %}Login{% endif %} - BotForge Pro{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="text-center mb-4">
+            <i class="fas fa-robot fa-4x text-gradient"></i>
+            <h2 class="mt-3">{% if register_mode %}Create Account{% else %}Welcome Back{% endif %}</h2>
+        </div>
+        
+        <form id="authForm" method="POST" action="{% if register_mode %}{{ url_for('register') }}{% else %}{{ url_for('login') }}{% endif %}">
+            <div class="mb-3">
+                <label class="form-label">
+                    <i class="fas fa-user"></i> Username
+                </label>
+                <input type="text" class="form-control" name="username" required>
+            </div>
+            
+            {% if register_mode %}
+            <div class="mb-3">
+                <label class="form-label">
+                    <i class="fas fa-envelope"></i> Email
+                </label>
+                <input type="email" class="form-control" name="email" required>
+            </div>
+            {% endif %}
+            
+            <div class="mb-3">
+                <label class="form-label">
+                    <i class="fas fa-lock"></i> Password
+                </label>
+                <input type="password" class="form-control" name="password" required minlength="6">
+            </div>
+            
+            <button type="submit" class="btn btn-gradient w-100 mb-3">
+                <i class="fas fa-{% if register_mode %}user-plus{% else %}sign-in-alt{% endif %}"></i>
+                {% if register_mode %}Register{% else %}Login{% endif %}
+            </button>
+        </form>
+        
+        <div class="text-center">
+            {% if register_mode %}
+                <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+            {% else %}
+                <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('authForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+    
+    try {
+        const response = await fetch(e.target.action, {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification('Success! Redirecting...', 'success');
+            setTimeout(() => window.location.href = data.redirect, 1000);
+        } else {
+            showNotification(data.message, 'error');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-{% if register_mode %}user-plus{% else %}sign-in-alt{% endif %}"></i> {% if register_mode %}Register{% else %}Login{% endif %}';
+        }
+    } catch (error) {
+        showNotification('An error occurred. Please try again.', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-{% if register_mode %}user-plus{% else %}sign-in-alt{% endif %}"></i> {% if register_mode %}Register{% else %}Login{% endif %}';
+    }
+});
+</script>
+{% endblock %}
