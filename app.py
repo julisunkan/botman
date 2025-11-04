@@ -8,7 +8,7 @@ import json
 from utils.database import (
     init_db, create_user, get_user_by_username, get_user_by_id,
     create_bot, get_user_bots, get_bot_by_id, delete_bot,
-    update_bot_webhook, toggle_bot_ai, update_bot_gemini_key,
+    update_bot_webhook, toggle_bot_ai, update_bot_gemini_key, update_bot_ton_wallet,
     get_bot_commands, add_command, update_command, delete_command,
     get_mining_settings, save_mining_settings,
     get_shop_items, add_shop_item, delete_shop_item,
