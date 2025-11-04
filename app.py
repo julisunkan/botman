@@ -389,17 +389,34 @@ def bot_users(bot_id):
 def user_detail(bot_id, telegram_user_id):
     bot = get_bot_by_id(bot_id)
     if not bot or bot['user_id'] != session['user_id']:
-        return redirect(url_for('dashboard'))
+        return jsonify({'success': False, 'message': 'Unauthorized'}), 403
     
     from utils.database import get_user_analytics
     user_progress = get_or_create_user_progress(bot_id, telegram_user_id)
     user_analytics = get_user_analytics(bot_id, telegram_user_id)
     
-    return render_template('user_detail.html', 
-                         bot=dict(bot), 
-                         telegram_user_id=telegram_user_id,
-                         user_progress=dict(user_progress),
-                         analytics=user_analytics)
+    stats = [
+        {'event_type': 'Messages', 'count': user_analytics['message_count']},
+        {'event_type': 'Commands', 'count': user_analytics['command_count']},
+        {'event_type': 'Taps', 'count': user_analytics['tap_count']}
+    ]
+    
+    activities = [
+        {
+            'event_type': dict(event)['event_type'],
+            'event_data': dict(event)['event_data'],
+            'timestamp': dict(event)['timestamp']
+        } for event in user_analytics['events']
+    ]
+    
+    return jsonify({
+        'success': True,
+        'user': {
+            'progress': dict(user_progress),
+            'stats': stats,
+            'activities': activities
+        }
+    })
 
 @app.route('/bot/<int:bot_id>/webapp')
 @app.route('/bot/<int:bot_id>/webapp/<webapp_type>')

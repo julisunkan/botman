@@ -408,6 +408,7 @@ def get_bot_unique_users(bot_id):
             up.level,
             up.referred_by,
             COUNT(DISTINCT a.id) as total_interactions,
+            MIN(a.timestamp) as first_seen,
             MAX(a.timestamp) as last_seen
         FROM user_progress up
         LEFT JOIN analytics a ON up.bot_id = a.bot_id AND up.telegram_user_id = a.telegram_user_id
