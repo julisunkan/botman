@@ -412,9 +412,11 @@ def user_detail(bot_id, telegram_user_id):
         }
     })
 
-@app.route('/bot/<int:bot_id>/webapp')
+@app.route('/bot/<int:bot_id>/webapp', defaults={'webapp_type': 'mining'})
+@app.route('/bot/<int:bot_id>/webapp/', defaults={'webapp_type': 'mining'})
 @app.route('/bot/<int:bot_id>/webapp/<webapp_type>')
-def webapp(bot_id, webapp_type='mining'):
+@app.route('/bot/<int:bot_id>/webapp/<webapp_type>/')
+def webapp(bot_id, webapp_type):
     bot = get_bot_by_id(bot_id)
     if not bot:
         return "Bot not found", 404
