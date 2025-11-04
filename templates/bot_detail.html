@@ -163,7 +163,7 @@
                             <td><span class="badge bg-info">{{ cmd.response_type }}</span></td>
                             <td>{{ cmd.response_content[:50] }}{% if cmd.response_content|length > 50 %}...{% endif %}</td>
                             <td>
-                                <button class="btn btn-sm btn-outline-primary me-2" onclick="showEditCommandForm({{ cmd.id }}, '{{ cmd.command }}', '{{ cmd.response_type }}', {{ cmd.response_content|tojson }}, {{ cmd.url_link|tojson }}, {{ cmd.button_text|tojson }})">
+                                <button class="btn btn-sm btn-outline-primary me-2" onclick='showEditCommandForm({{ cmd.id }}, {{ cmd.command|tojson }}, {{ cmd.response_type|tojson }}, {{ cmd.response_content|tojson }}, {{ cmd.url_link|tojson }}, {{ cmd.button_text|tojson }})'>
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button class="btn btn-sm btn-outline-danger" onclick="showDeleteCommandConfirm({{ cmd.id }}, '{{ cmd.command }}')">
@@ -593,12 +593,19 @@ function showEditCommandForm(cmdId, command, responseType, responseContent, urlL
         return;
     }
     
+    // Escape HTML for safe insertion
+    const escapeHtml = (text) => {
+        const div = document.createElement('div');
+        div.textContent = text || '';
+        return div.innerHTML;
+    };
+    
     const editRow = document.createElement('tr');
     editRow.className = 'edit-command-row';
     editRow.innerHTML = `
         <td colspan="4">
             <form id="editCommandForm-${cmdId}" class="p-3 bg-dark">
-                <h6 class="mb-3"><i class="fas fa-edit"></i> Edit Command: /${command}</h6>
+                <h6 class="mb-3"><i class="fas fa-edit"></i> Edit Command: /${escapeHtml(command)}</h6>
                 <input type="hidden" name="command_id" value="${cmdId}">
                 <div class="row g-3">
                     <div class="col-md-3">
@@ -611,15 +618,15 @@ function showEditCommandForm(cmdId, command, responseType, responseContent, urlL
                     </div>
                     <div class="col-md-9">
                         <label class="form-label">Response Content</label>
-                        <textarea class="form-control" name="response_content" rows="3" required>${responseContent || ''}</textarea>
+                        <textarea class="form-control" name="response_content" rows="3" required>${escapeHtml(responseContent)}</textarea>
                     </div>
                     <div class="col-md-6" id="editUrlButtonFields-${cmdId}" style="display: ${responseType === 'url_button' ? 'block' : 'none'};">
                         <label class="form-label">Button Text</label>
-                        <input type="text" class="form-control" name="button_text" value="${buttonText || ''}">
+                        <input type="text" class="form-control" name="button_text" value="${escapeHtml(buttonText)}">
                     </div>
                     <div class="col-md-6" id="editUrlLinkField-${cmdId}" style="display: ${responseType === 'url_button' ? 'block' : 'none'};">
                         <label class="form-label">URL</label>
-                        <input type="text" class="form-control" name="url_link" value="${urlLink || ''}">
+                        <input type="text" class="form-control" name="url_link" value="${escapeHtml(urlLink)}">
                     </div>
                     <div class="col-md-12">
                         <button type="submit" class="btn btn-success">
