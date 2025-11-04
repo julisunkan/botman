@@ -34,3 +34,6 @@ outputType = "webview"
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[deployment]
+run = ["sh", "-c", "gunicorn app:app --bind 0.0.0.0:5000"]
