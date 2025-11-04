@@ -11,3 +11,10 @@ requests
 Werkzeug
 Pillow
 Pillow
+cryptography
+Flask
+google-generativeai
+gunicorn
+Pillow
+requests
+Werkzeug
