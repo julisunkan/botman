@@ -703,14 +703,15 @@ def import_template():
     for cmd in template.get('commands', []):
         url_link = cmd.get('url_link', '')
         if url_link:
-            # Replace BOT_ID and ensure webapp type is correct
+            # Replace BOT_ID placeholder
             url_link = url_link.replace('BOT_ID', str(bot_id))
-            # If URL contains /webapp/, ensure it has the correct type
-            if '/webapp/' in url_link and webapp_type != 'mining':
-                # Update the webapp type in the URL
-                parts = url_link.split('/webapp/')
-                if len(parts) > 1:
-                    url_link = f"{parts[0]}/webapp/{webapp_type}"
+            
+            # If URL contains /webapp, ensure it has the correct type
+            if '/webapp' in url_link:
+                if webapp_type != 'mining':
+                    # Replace /webapp or /webapp/ with /webapp/{type}
+                    url_link = url_link.replace('/webapp/', f'/webapp/{webapp_type}')
+                    url_link = url_link.replace('/webapp', f'/webapp/{webapp_type}')
         add_command(bot_id, cmd['command'], cmd['response_type'], 
                    cmd['response_content'], url_link, cmd.get('button_text'))
     
