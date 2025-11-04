@@ -394,26 +394,6 @@ def user_detail(bot_id, telegram_user_id):
                          user_progress=dict(user_progress),
                          analytics=user_analytics)
 
-@app.route('/bot/<int:bot_id>/users')
-@login_required
-def bot_users(bot_id):
-    bot = get_bot_by_id(bot_id)
-    if not bot or bot['user_id'] != session['user_id']:
-        return redirect(url_for('dashboard'))
-    
-    users = get_bot_users_list(bot_id)
-    return render_template('bot_users.html', bot=dict(bot), users=users)
-
-@app.route('/bot/<int:bot_id>/user/<int:telegram_user_id>')
-@login_required
-def bot_user_detail(bot_id, telegram_user_id):
-    bot = get_bot_by_id(bot_id)
-    if not bot or bot['user_id'] != session['user_id']:
-        return jsonify({'success': False, 'message': 'Unauthorized'}), 403
-    
-    user_data = get_user_detail(bot_id, telegram_user_id)
-    return jsonify({'success': True, 'user': user_data})
-
 @app.route('/bot/<int:bot_id>/webapp')
 @app.route('/bot/<int:bot_id>/webapp/<webapp_type>')
 def webapp(bot_id, webapp_type='mining'):

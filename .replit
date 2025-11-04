@@ -1,4 +1,4 @@
-modules = ["python-3.11"]
+modules = ["web", "python-3.11", "nodejs-20"]
 [agent]
 expertMode = true
 integrations = ["python_gemini:1.0.0"]
@@ -34,6 +34,10 @@ outputType = "webview"
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[[ports]]
+localPort = 34503
+externalPort = 3000
 
 [deployment]
 run = ["sh", "-c", "gunicorn app:app --bind 0.0.0.0:5000"]
