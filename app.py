@@ -168,7 +168,12 @@ def setup_webhook(bot_id):
         return jsonify({'success': False, 'message': 'Unauthorized'}), 403
     
     bot_token = decrypt_token(bot['bot_token'])
-    webhook_url = f"{request.host_url.rstrip('/')}/webhook/{bot_id}"
+    
+    replit_domain = os.getenv('REPLIT_DOMAINS')
+    if replit_domain:
+        webhook_url = f"https://{replit_domain}/webhook/{bot_id}"
+    else:
+        webhook_url = f"{request.host_url.rstrip('/')}/webhook/{bot_id}"
     
     api = TelegramBotAPI(bot_token)
     result = api.set_webhook(webhook_url)
@@ -177,7 +182,8 @@ def setup_webhook(bot_id):
         update_bot_webhook(bot_id, webhook_url)
         return jsonify({'success': True, 'message': 'Webhook set successfully', 'webhook_url': webhook_url})
     else:
-        return jsonify({'success': False, 'message': 'Failed to set webhook'}), 400
+        error_msg = result.get('description', 'Failed to set webhook')
+        return jsonify({'success': False, 'message': error_msg}), 400
 
 @app.route('/bot/<int:bot_id>/toggle-ai', methods=['POST'])
 @login_required
