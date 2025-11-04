@@ -600,8 +600,11 @@ def import_template():
         template = json.load(f)
     
     for cmd in template.get('commands', []):
+        url_link = cmd.get('url_link', '')
+        if url_link:
+            url_link = url_link.replace('BOT_ID', str(bot_id))
         add_command(bot_id, cmd['command'], cmd['response_type'], 
-                   cmd['response_content'], cmd.get('url_link'), cmd.get('button_text'))
+                   cmd['response_content'], url_link, cmd.get('button_text'))
     
     if 'mining_settings' in template:
         save_mining_settings(bot_id, template['mining_settings'])
