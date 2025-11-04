@@ -143,14 +143,33 @@
 let selectedTemplate = '';
 
 async function loadUserBots() {
-    return [];
+    try {
+        const response = await fetch('/api/user-bots');
+        const data = await response.json();
+        return data.bots || [];
+    } catch (error) {
+        console.error('Error loading bots:', error);
+        return [];
+    }
 }
 
-function showImportModal(templateId) {
+async function showImportModal(templateId) {
     selectedTemplate = templateId;
+    
+    const selectBot = document.getElementById('selectBot');
+    selectBot.innerHTML = '<option value="">-- Select Bot --</option>';
+    
+    const bots = await loadUserBots();
+    bots.forEach(bot => {
+        const option = document.createElement('option');
+        option.value = bot.id;
+        option.textContent = bot.bot_name;
+        selectBot.appendChild(option);
+    });
+    
     const modal = new bootstrap.Modal(document.getElementById('importModal'));
     modal.show();
-}
+}</script>
 
 async function importTemplate() {
     const botId = document.getElementById('selectBot').value;

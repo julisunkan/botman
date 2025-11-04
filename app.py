@@ -480,6 +480,13 @@ def webhook_handler(bot_id):
 def templates():
     return render_template('templates.html')
 
+@app.route('/api/user-bots')
+@login_required
+def api_user_bots():
+    user_id = session['user_id']
+    bots = get_user_bots(user_id)
+    return jsonify({'success': True, 'bots': [{'id': bot['id'], 'bot_name': bot['bot_name']} for bot in bots]})
+
 @app.route('/import-template', methods=['POST'])
 @login_required
 def import_template():
