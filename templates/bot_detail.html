@@ -163,7 +163,7 @@
                             <td><span class="badge bg-info">{{ cmd.response_type }}</span></td>
                             <td>{{ cmd.response_content[:50] }}{% if cmd.response_content|length > 50 %}...{% endif %}</td>
                             <td>
-                                <button class="btn btn-sm btn-outline-danger" onclick="deleteCommand({{ cmd.id }})">
+                                <button class="btn btn-sm btn-outline-danger" onclick="showDeleteCommandConfirm({{ cmd.id }}, '{{ cmd.command }}')">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </td>
@@ -283,7 +283,7 @@
                         <p>{{ item.item_description }}</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <strong>{{ item.price }} {{ item.currency }}</strong>
-                            <button class="btn btn-sm btn-outline-danger" onclick="deleteShopItem({{ item.id }})">
+                            <button class="btn btn-sm btn-outline-danger" onclick="showDeleteShopItemConfirm({{ item.id }}, '{{ item.item_name }}')">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -343,7 +343,7 @@
                         <p>{{ task.task_description }}</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="badge bg-success">+{{ task.reward_amount }} {{ task.reward_type }}</span>
-                            <button class="btn btn-sm btn-outline-danger" onclick="deleteTask({{ task.id }})">
+                            <button class="btn btn-sm btn-outline-danger" onclick="showDeleteTaskConfirm({{ task.id }}, '{{ task.task_name }}')">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -458,8 +458,35 @@ async function setupWebhook(botId) {
     }
 }
 
-async function deleteCommand(cmdId) {
-    if (!confirm('Delete this command?')) return;
+function showDeleteCommandConfirm(cmdId, commandName) {
+    const row = event.target.closest('tr');
+    const existingConfirm = row.querySelector('.delete-confirmation');
+    if (existingConfirm) {
+        existingConfirm.remove();
+        return;
+    }
+    
+    const confirmDiv = document.createElement('td');
+    confirmDiv.setAttribute('colspan', '4');
+    confirmDiv.className = 'delete-confirmation';
+    confirmDiv.innerHTML = `
+        <p class="mb-2"><strong>Delete command /${commandName}?</strong></p>
+        <div class="d-flex gap-2">
+            <button class="btn btn-sm btn-danger" onclick="confirmDeleteCommand(${cmdId})">
+                <i class="fas fa-check"></i> Yes, Delete
+            </button>
+            <button class="btn btn-sm btn-secondary" onclick="this.closest('td').remove()">
+                <i class="fas fa-times"></i> Cancel
+            </button>
+        </div>
+    `;
+    
+    const newRow = document.createElement('tr');
+    newRow.appendChild(confirmDiv);
+    row.after(newRow);
+}
+
+async function confirmDeleteCommand(cmdId) {
     try {
         const formData = new FormData();
         formData.append('command_id', cmdId);
@@ -474,8 +501,32 @@ async function deleteCommand(cmdId) {
     }
 }
 
-async function deleteShopItem(itemId) {
-    if (!confirm('Delete this item?')) return;
+function showDeleteShopItemConfirm(itemId, itemName) {
+    const card = event.target.closest('.col-md-6');
+    const existingConfirm = card.querySelector('.delete-confirmation');
+    if (existingConfirm) {
+        existingConfirm.remove();
+        return;
+    }
+    
+    const confirmDiv = document.createElement('div');
+    confirmDiv.className = 'delete-confirmation mt-2';
+    confirmDiv.innerHTML = `
+        <p class="mb-2"><strong>Delete "${itemName}"?</strong></p>
+        <div class="d-flex gap-2">
+            <button class="btn btn-sm btn-danger" onclick="confirmDeleteShopItem(${itemId})">
+                <i class="fas fa-check"></i> Yes, Delete
+            </button>
+            <button class="btn btn-sm btn-secondary" onclick="this.remove()">
+                <i class="fas fa-times"></i> Cancel
+            </button>
+        </div>
+    `;
+    
+    card.querySelector('.shop-item-card').appendChild(confirmDiv);
+}
+
+async function confirmDeleteShopItem(itemId) {
     try {
         const formData = new FormData();
         formData.append('item_id', itemId);
@@ -490,8 +541,32 @@ async function deleteShopItem(itemId) {
     }
 }
 
-async function deleteTask(taskId) {
-    if (!confirm('Delete this task?')) return;
+function showDeleteTaskConfirm(taskId, taskName) {
+    const card = event.target.closest('.col-md-6');
+    const existingConfirm = card.querySelector('.delete-confirmation');
+    if (existingConfirm) {
+        existingConfirm.remove();
+        return;
+    }
+    
+    const confirmDiv = document.createElement('div');
+    confirmDiv.className = 'delete-confirmation mt-2';
+    confirmDiv.innerHTML = `
+        <p class="mb-2"><strong>Delete "${taskName}"?</strong></p>
+        <div class="d-flex gap-2">
+            <button class="btn btn-sm btn-danger" onclick="confirmDeleteTask(${taskId})">
+                <i class="fas fa-check"></i> Yes, Delete
+            </button>
+            <button class="btn btn-sm btn-secondary" onclick="this.remove()">
+                <i class="fas fa-times"></i> Cancel
+            </button>
+        </div>
+    `;
+    
+    card.querySelector('.task-card').appendChild(confirmDiv);
+}
+
+async function confirmDeleteTask(taskId) {
     try {
         const formData = new FormData();
         formData.append('task_id', taskId);
