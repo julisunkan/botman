@@ -1,3 +1,4 @@
+
 {
   "name": "AI Chatbot",
   "description": "Intelligent conversational bot powered by Google Gemini",
@@ -5,18 +6,25 @@
   "commands": [
     {
       "command": "start",
-      "response_type": "text",
-      "response_content": "👋 Hello! I'm an AI-powered chatbot. Ask me anything!"
+      "response_type": "url_button",
+      "response_content": "👋 Welcome to AI Chatbot! I'm powered by Google Gemini AI.\n\n🤖 I can help you with:\n• Answer questions\n• Explain concepts\n• Creative writing\n• Problem solving\n• And much more!\n\nClick below to open my interactive web interface or just send me a message!",
+      "url_link": "/bot/BOT_ID/webapp/ai",
+      "button_text": "🎨 Open AI Chat Interface"
     },
     {
       "command": "help",
       "response_type": "text",
-      "response_content": "I'm here to help! Just send me any message and I'll respond using advanced AI."
+      "response_content": "🆘 How to use me:\n\n1️⃣ Just send me any message and I'll respond using AI\n2️⃣ Use /webapp to open the interactive chat interface\n3️⃣ Ask me anything - I'm here to help!\n\n💡 Tips:\n• Be specific in your questions\n• I can understand context from our conversation\n• Try different topics - I'm versatile!"
+    },
+    {
+      "command": "webapp",
+      "response_type": "text",
+      "response_content": "🎮 Click the button below to open the AI Chat Interface!"
     },
     {
       "command": "about",
       "response_type": "text",
-      "response_content": "I'm powered by Google Gemini AI, capable of understanding and responding to natural language."
+      "response_content": "ℹ️ About AI Chatbot\n\n🧠 I'm powered by Google Gemini AI, one of the most advanced language models available.\n\n✨ Capabilities:\n• Natural language understanding\n• Context-aware responses\n• Multi-topic expertise\n• Creative and analytical thinking\n\n🚀 Created with Advanced Bots Creator"
     }
   ]
 }

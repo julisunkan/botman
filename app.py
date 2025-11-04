@@ -358,23 +358,35 @@ def delete_task_route(bot_id):
     return jsonify({'success': True, 'message': 'Task deleted successfully'})
 
 @app.route('/bot/<int:bot_id>/webapp')
-def webapp(bot_id):
+@app.route('/bot/<int:bot_id>/webapp/<webapp_type>')
+def webapp(bot_id, webapp_type='mining'):
     bot = get_bot_by_id(bot_id)
     if not bot:
         return "Bot not found", 404
     
-    mining_settings = get_mining_settings(bot_id)
-    shop_items = get_shop_items(bot_id)
-    tasks = get_tasks(bot_id)
-    
     telegram_user_id = request.args.get('user_id', 12345)
     
-    return render_template('webapp.html', 
-                         bot=dict(bot),
-                         mining_settings=mining_settings,
-                         shop_items=shop_items,
-                         tasks=tasks,
-                         telegram_user_id=telegram_user_id)
+    if webapp_type == 'ai':
+        return render_template('webapp_ai.html', 
+                             bot=dict(bot),
+                             telegram_user_id=telegram_user_id)
+    elif webapp_type == 'payment':
+        shop_items = get_shop_items(bot_id)
+        return render_template('webapp_payment.html',
+                             bot=dict(bot),
+                             shop_items=shop_items,
+                             telegram_user_id=telegram_user_id)
+    else:
+        mining_settings = get_mining_settings(bot_id)
+        shop_items = get_shop_items(bot_id)
+        tasks = get_tasks(bot_id)
+        
+        return render_template('webapp.html', 
+                             bot=dict(bot),
+                             mining_settings=mining_settings,
+                             shop_items=shop_items,
+                             tasks=tasks,
+                             telegram_user_id=telegram_user_id)
 
 @app.route('/bot/<int:bot_id>/tap', methods=['POST'])
 def tap(bot_id):
@@ -500,6 +512,24 @@ def webhook_handler(bot_id):
                 api.send_message(chat_id, '🎮 Click the button below to open the mini-app:', keyboard)
                 return 'OK'
             
+            if command == 'start':
+                # Check if there's a custom start command
+                commands = get_bot_commands(bot_id)
+                start_cmd = next((cmd for cmd in commands if cmd['command'] == 'start'), None)
+                
+                if start_cmd:
+                    if start_cmd['response_type'] == 'url_button':
+                        # Replace BOT_ID placeholder with actual bot_id
+                        url_link = start_cmd['url_link'].replace('BOT_ID', str(bot_id))
+                        webapp_url = f"{request.host_url.rstrip('/')}{url_link}?user_id={telegram_user_id}"
+                        keyboard = api.create_web_app_keyboard(start_cmd['button_text'], webapp_url)
+                        api.send_message(chat_id, start_cmd['response_content'], keyboard)
+                    elif start_cmd['response_type'] == 'text':
+                        api.send_message(chat_id, start_cmd['response_content'])
+                    elif start_cmd['response_type'] == 'photo':
+                        api.send_photo(chat_id, start_cmd['response_content'])
+                    return 'OK'
+            
             commands = get_bot_commands(bot_id)
             for cmd in commands:
                 if cmd['command'] == command:
@@ -508,10 +538,18 @@ def webhook_handler(bot_id):
                     elif cmd['response_type'] == 'photo':
                         api.send_photo(chat_id, cmd['response_content'])
                     elif cmd['response_type'] == 'url_button':
-                        keyboard = api.create_inline_keyboard([[{
-                            'text': cmd['button_text'],
-                            'url': cmd['url_link']
-                        }]])
+                        # Check if it's a webapp URL (contains /bot/)
+                        url_link = cmd['url_link'].replace('BOT_ID', str(bot_id))
+                        if '/bot/' in url_link:
+                            # It's a webapp, use web_app button
+                            webapp_url = f"{request.host_url.rstrip('/')}{url_link}?user_id={telegram_user_id}"
+                            keyboard = api.create_web_app_keyboard(cmd['button_text'], webapp_url)
+                        else:
+                            # Regular URL button
+                            keyboard = api.create_inline_keyboard([[{
+                                'text': cmd['button_text'],
+                                'url': cmd['url_link']
+                            }]])
                         api.send_message(chat_id, cmd['response_content'], keyboard)
                     return 'OK'
             

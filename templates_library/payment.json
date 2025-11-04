@@ -1,22 +1,32 @@
+
 {
   "name": "Payment Bot",
-  "description": "Accept payments via TON blockchain",
+  "description": "Accept payments via TON blockchain with beautiful interface",
   "category": "Payment",
   "commands": [
     {
       "command": "start",
-      "response_type": "text",
-      "response_content": "💳 Welcome! I can process payments via TON blockchain.\n\nUse /buy to make a purchase."
+      "response_type": "url_button",
+      "response_content": "💳 Welcome to Payment Bot!\n\n🎯 Features:\n✅ Secure TON payments\n✅ Multiple payment options\n✅ Instant confirmations\n✅ Transaction history\n\nClick below to access our payment portal!",
+      "url_link": "/bot/BOT_ID/webapp/payment",
+      "button_text": "💰 Open Payment Portal"
     },
     {
       "command": "buy",
-      "response_type": "text",
-      "response_content": "🛒 Select a product:\n1. Premium Access - 5 TON\n2. VIP Status - 10 TON\n3. Lifetime Membership - 50 TON"
+      "response_type": "url_button",
+      "response_content": "🛒 Browse our products:\n\n💎 Premium Access - 5 TON\n⭐ VIP Status - 10 TON\n👑 Lifetime Membership - 50 TON\n\nClick below to view all options and make a purchase!",
+      "url_link": "/bot/BOT_ID/webapp/payment",
+      "button_text": "🛍️ View Products"
     },
     {
       "command": "wallet",
       "response_type": "text",
-      "response_content": "👛 Connect your TON wallet to get started!"
+      "response_content": "👛 TON Wallet Guide\n\n📱 To make payments:\n1. Install Tonkeeper or similar wallet\n2. Fund your wallet with TON\n3. Use /buy to see products\n4. Click payment buttons to complete purchase\n\n🔒 All transactions are secure and instant!"
+    },
+    {
+      "command": "webapp",
+      "response_type": "text",
+      "response_content": "🎮 Click the button to open the payment interface!"
     }
   ]
 }

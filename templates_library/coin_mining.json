@@ -1,12 +1,15 @@
+
 {
   "name": "Tap-to-Earn Mining",
-  "description": "Complete mining game with tap mechanics",
+  "description": "Complete mining game with tap mechanics and beautiful interface",
   "category": "Game",
   "commands": [
     {
       "command": "start",
-      "response_type": "text",
-      "response_content": "⛏️ Welcome to the mining game! Tap to earn coins and climb the leaderboard!"
+      "response_type": "url_button",
+      "response_content": "⛏️ Welcome to the Mining Game!\n\n🎮 Features:\n💎 Tap to earn coins\n⚡ Energy system\n🏆 Leaderboards\n🛒 Shop & Upgrades\n📋 Daily tasks\n\nStart mining now!",
+      "url_link": "/bot/BOT_ID/webapp",
+      "button_text": "🎮 Start Mining"
     },
     {
       "command": "webapp",
@@ -15,8 +18,17 @@
     },
     {
       "command": "stats",
-      "response_type": "text",
-      "response_content": "📊 Your mining stats:\n💎 Coins: Loading...\n⚡ Energy: Loading...\n👆 Total taps: Loading..."
+      "response_type": "url_button",
+      "response_content": "📊 View Your Mining Stats:\n\n💎 Total coins earned\n⚡ Current energy\n👆 Total taps\n🏅 Your level\n\nOpen the app to see detailed statistics!",
+      "url_link": "/bot/BOT_ID/webapp",
+      "button_text": "📈 View Stats"
+    },
+    {
+      "command": "shop",
+      "response_type": "url_button",
+      "response_content": "🛒 Mining Shop\n\n🔧 Upgrades available\n⚡ Boost your earnings\n💎 Special items\n\nCheck out what's available!",
+      "url_link": "/bot/BOT_ID/webapp",
+      "button_text": "🛍️ Open Shop"
     }
   ],
   "mining_settings": {
