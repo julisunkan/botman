@@ -1,7 +1,7 @@
-# BotForge Pro - Telegram Bot Creator
+# Advanced Bots Creator - Telegram Bot Creator
 
 ## Overview
-BotForge Pro is a comprehensive web application for creating, managing, and deploying Telegram bots with advanced features including AI integration, tap-to-earn mining games, payment processing, and analytics.
+Advanced Bots Creator is a comprehensive web application for creating, managing, and deploying Telegram bots with advanced features including AI integration, tap-to-earn mining games, payment processing, and analytics.
 
 ## Tech Stack
 - **Backend**: Flask 3.0.0 (Python 3.11)

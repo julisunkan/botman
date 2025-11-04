@@ -1,7 +1,7 @@
 
 {
-  "name": "BotForge Pro",
-  "short_name": "BotForge",
+  "name": "Advanced Bots Creator",
+  "short_name": "AdvBots",
   "description": "Create and manage Telegram bots with AI, mining games, and payments",
   "start_url": "/",
   "display": "standalone",
