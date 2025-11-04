@@ -1,0 +1,46 @@
+
+{
+  "name": "Quiz & Trivia",
+  "description": "Interactive quiz bot with scoring and leaderboards",
+  "category": "Entertainment",
+  "commands": [
+    {
+      "command": "start",
+      "response_type": "url_button",
+      "response_content": "🎯 Welcome to Quiz Master!\n\n🧠 Test your knowledge with:\n• Multiple choice questions\n• Daily challenges\n• Leaderboard rankings\n• Streak tracking\n\nReady to prove your skills?",
+      "url_link": "/bot/BOT_ID/webapp",
+      "button_text": "🎮 Start Quiz"
+    },
+    {
+      "command": "quiz",
+      "response_type": "url_button",
+      "response_content": "🎲 Start a new quiz!\n\nChoose from various categories:\n📚 General Knowledge\n🔬 Science\n🎨 Arts & Culture\n⚽ Sports\n🎬 Movies & TV\n\nClick below to begin!",
+      "url_link": "/bot/BOT_ID/webapp",
+      "button_text": "🎯 Take Quiz"
+    },
+    {
+      "command": "stats",
+      "response_type": "url_button",
+      "response_content": "📊 Your Quiz Statistics:\n\n✅ Questions answered\n🏆 Total score\n🔥 Current streak\n🎯 Accuracy rate\n📈 Rank on leaderboard\n\nView detailed stats!",
+      "url_link": "/bot/BOT_ID/webapp",
+      "button_text": "📈 View Stats"
+    },
+    {
+      "command": "leaderboard",
+      "response_type": "url_button",
+      "response_content": "🏆 Top Quiz Masters\n\nSee who's leading:\n🥇 Top scorer\n🔥 Longest streak\n📚 Most questions answered\n\nCan you make it to the top?",
+      "url_link": "/bot/BOT_ID/webapp",
+      "button_text": "👑 View Leaderboard"
+    },
+    {
+      "command": "daily",
+      "response_type": "text",
+      "response_content": "📅 Daily Challenge\n\nComplete today's challenge for bonus points!\n\n🎁 Rewards:\n• Double points\n• Streak bonus\n• Exclusive badges\n\nUse /quiz to start!"
+    },
+    {
+      "command": "help",
+      "response_type": "text",
+      "response_content": "🆘 Quiz Bot Help\n\n/quiz - Start a quiz\n/stats - View your statistics\n/leaderboard - See top players\n/daily - Today's challenge\n/categories - Browse categories\n/rules - Quiz rules\n\nAnswer questions correctly to earn points and climb the leaderboard! 🚀"
+    }
+  ]
+}

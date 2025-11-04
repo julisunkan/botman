@@ -1,0 +1,49 @@
+
+{
+  "name": "Fitness Tracker",
+  "description": "Track workouts, nutrition, and health goals",
+  "category": "Health",
+  "commands": [
+    {
+      "command": "start",
+      "response_type": "url_button",
+      "response_content": "💪 Welcome to Fitness Tracker!\n\n🏃 Features:\n• Workout logging\n• Nutrition tracking\n• Progress charts\n• Goal setting\n• Daily reminders\n\nStart your fitness journey today!",
+      "url_link": "/bot/BOT_ID/webapp",
+      "button_text": "🎯 Open Fitness App"
+    },
+    {
+      "command": "log",
+      "response_type": "url_button",
+      "response_content": "📝 Log Your Activity\n\n🏋️ Workouts\n🍎 Meals\n💧 Water intake\n😴 Sleep hours\n⚖️ Weight\n\nTrack your daily progress!",
+      "url_link": "/bot/BOT_ID/webapp",
+      "button_text": "➕ Log Activity"
+    },
+    {
+      "command": "stats",
+      "response_type": "url_button",
+      "response_content": "📊 Your Fitness Stats\n\n🔥 Calories burned\n🏃 Total workouts\n📈 Weight progress\n💪 Strength gains\n⭐ Streaks\n\nView detailed analytics!",
+      "url_link": "/bot/BOT_ID/webapp",
+      "button_text": "📈 View Stats"
+    },
+    {
+      "command": "goals",
+      "response_type": "text",
+      "response_content": "🎯 Set Your Goals\n\nWhat do you want to achieve?\n\n💪 Lose weight\n🏋️ Build muscle\n🏃 Improve endurance\n🧘 Better flexibility\n😴 Sleep quality\n\nReply with your goal to get personalized plans!"
+    },
+    {
+      "command": "workout",
+      "response_type": "text",
+      "response_content": "🏋️ Quick Workout Ideas\n\n✅ 7-Minute Home Workout\n✅ Upper Body Routine\n✅ Core Strengthening\n✅ Cardio Blast\n✅ Flexibility & Stretching\n\nUse /log to track your session!"
+    },
+    {
+      "command": "nutrition",
+      "response_type": "text",
+      "response_content": "🍎 Nutrition Tips\n\n• Stay hydrated (8+ glasses/day)\n• Balanced meals (protein, carbs, fats)\n• Eat whole foods\n• Portion control\n• Meal prep helps!\n\nUse /log to track your meals!"
+    },
+    {
+      "command": "help",
+      "response_type": "text",
+      "response_content": "🆘 Fitness Bot Help\n\n/log - Track activity\n/stats - View progress\n/goals - Set targets\n/workout - Exercise ideas\n/nutrition - Diet tips\n/reminders - Set notifications\n\nStay consistent, stay healthy! 💪"
+    }
+  ]
+}

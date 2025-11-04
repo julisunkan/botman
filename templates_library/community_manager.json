@@ -1,0 +1,48 @@
+
+{
+  "name": "Community Manager",
+  "description": "Manage your community with welcome messages, rules, and moderation",
+  "category": "Community",
+  "commands": [
+    {
+      "command": "start",
+      "response_type": "text",
+      "response_content": "👋 Welcome to our community!\n\nI'm here to help you navigate and enjoy your time here.\n\n📖 Use /rules to see community guidelines\n📋 Use /help to see all commands\n👥 Use /about to learn more about us"
+    },
+    {
+      "command": "rules",
+      "response_type": "text",
+      "response_content": "📜 Community Rules:\n\n1️⃣ Be respectful to all members\n2️⃣ No spam or self-promotion\n3️⃣ Keep conversations on-topic\n4️⃣ No harassment or hate speech\n5️⃣ Follow Telegram's Terms of Service\n\n⚠️ Violations may result in warnings or removal from the community."
+    },
+    {
+      "command": "help",
+      "response_type": "text",
+      "response_content": "🆘 Available Commands:\n\n/start - Welcome message\n/rules - Community guidelines\n/about - About our community\n/faq - Frequently asked questions\n/contact - Contact moderators\n/events - Upcoming events\n/feedback - Submit feedback"
+    },
+    {
+      "command": "about",
+      "response_type": "text",
+      "response_content": "ℹ️ About Our Community\n\nWe are a vibrant community of like-minded individuals coming together to share, learn, and grow.\n\n🌟 What we offer:\n• Active discussions\n• Helpful resources\n• Regular events\n• Supportive environment\n\nJoin us on this journey!"
+    },
+    {
+      "command": "faq",
+      "response_type": "text",
+      "response_content": "❓ Frequently Asked Questions\n\nQ: How do I get started?\nA: Read /rules and introduce yourself!\n\nQ: Can I share my content?\nA: Yes, but follow our guidelines.\n\nQ: Who are the moderators?\nA: Use /contact to reach the team.\n\nQ: How do I report issues?\nA: Use /feedback or contact mods directly."
+    },
+    {
+      "command": "contact",
+      "response_type": "text",
+      "response_content": "📧 Contact Moderators\n\nNeed help or have questions?\n\nOur moderation team is here for you!\n\n💬 You can:\n• Reply to this message\n• Use /feedback for suggestions\n• Tag @admin in the group (if applicable)\n\nWe'll get back to you ASAP!"
+    },
+    {
+      "command": "events",
+      "response_type": "text",
+      "response_content": "📅 Upcoming Events\n\n🎉 Weekly Discussion - Every Friday\n🏆 Monthly Contest - Last Saturday\n🎓 Learning Sessions - Bi-weekly\n\nStay tuned for announcements!\nUse /help to see how you can participate."
+    },
+    {
+      "command": "feedback",
+      "response_type": "text",
+      "response_content": "💭 Submit Feedback\n\nWe value your input!\n\nPlease reply to this message with your:\n• Suggestions\n• Improvements\n• Concerns\n• Ideas\n\nYour feedback helps us improve! 🙏"
+    }
+  ]
+}
