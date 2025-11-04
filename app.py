@@ -615,18 +615,18 @@ def webhook_handler(bot_id):
                     elif cmd['response_type'] == 'photo':
                         api.send_photo(chat_id, cmd['response_content'])
                     elif cmd['response_type'] == 'url_button':
-                        # Check if it's a webapp URL (contains /bot/)
+                        # Replace BOT_ID placeholder
                         url_link = cmd['url_link'].replace('BOT_ID', str(bot_id))
+                        
+                        # Check if it's an internal webapp URL (contains /bot/)
                         if '/bot/' in url_link:
-                            # It's a webapp, use web_app button
+                            # Internal webapp - add user_id parameter
                             webapp_url = f"{request.host_url.rstrip('/')}{url_link}?user_id={telegram_user_id}"
                             keyboard = api.create_web_app_keyboard(cmd['button_text'], webapp_url)
                         else:
-                            # Regular URL button
-                            keyboard = api.create_inline_keyboard([[{
-                                'text': cmd['button_text'],
-                                'url': cmd['url_link']
-                            }]])
+                            # External URL - use web_app to load it seamlessly in Telegram
+                            keyboard = api.create_web_app_keyboard(cmd['button_text'], url_link)
+                        
                         api.send_message(chat_id, cmd['response_content'], keyboard)
                     return 'OK'
             

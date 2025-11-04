@@ -144,7 +144,7 @@
                     </div>
                     <div class="col-md-6">
                         <input type="text" class="form-control" name="url_link" placeholder="URL or /bot/BOT_ID/webapp">
-                        <small class="form-text text-muted">Use BOT_ID as placeholder for your bot ID</small>
+                        <small class="form-text text-muted">Internal: /bot/BOT_ID/webapp or External: https://example.com</small>
                     </div>
                 </div>
             </form>
@@ -633,7 +633,7 @@ function showEditCommandForm(cmdId, command, responseType, responseContent, urlL
                     <div class="col-md-6" id="editUrlLinkField-${cmdId}" style="display: ${responseType === 'url_button' ? 'block' : 'none'};">
                         <label class="form-label">URL</label>
                         <input type="text" class="form-control" name="url_link" value="${escapeHtml(urlLink)}">
-                        <small class="form-text text-muted">Use BOT_ID as placeholder for your bot ID</small>
+                        <small class="form-text text-muted">Internal: /bot/BOT_ID/webapp or External: https://example.com</small>
                     </div>
                     <div class="col-md-12">
                         <button type="submit" class="btn btn-success">
