@@ -86,7 +86,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="card-glass mt-4">
             <h4><i class="fas fa-info-circle"></i> Bot Information</h4>
             <table class="table table-dark table-borderless mt-3">
@@ -113,7 +113,7 @@
             </table>
         </div>
     </div>
-    
+
     <div class="tab-pane fade" id="commands">
         <div class="card-glass mb-4">
             <h4><i class="fas fa-plus-circle"></i> Add New Command</h4>
@@ -149,7 +149,7 @@
                 </div>
             </form>
         </div>
-        
+
         <div class="card-glass">
             <h4><i class="fas fa-list"></i> Existing Commands</h4>
             <div class="table-responsive mt-3">
@@ -183,7 +183,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="tab-pane fade" id="ai-settings">
         <div class="card-glass">
             <h4><i class="fas fa-brain"></i> AI Settings</h4>
@@ -207,7 +207,7 @@
             </form>
         </div>
     </div>
-    
+
     <div class="tab-pane fade" id="mining">
         <div class="card-glass">
             <h4><i class="fas fa-gamepad"></i> Mining Game Configuration</h4>
@@ -252,7 +252,7 @@
             </form>
         </div>
     </div>
-    
+
     <div class="tab-pane fade" id="shop">
         <div class="card-glass mb-4">
             <h4><i class="fas fa-plus-circle"></i> Add Shop Item</h4>
@@ -281,7 +281,7 @@
                 </div>
             </form>
         </div>
-        
+
         <div class="card-glass">
             <h4><i class="fas fa-shopping-cart"></i> Shop Items</h4>
             <div class="row g-3 mt-2">
@@ -302,7 +302,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="tab-pane fade" id="tasks">
         <div class="card-glass mb-4">
             <h4><i class="fas fa-plus-circle"></i> Add Task</h4>
@@ -341,7 +341,7 @@
                 </div>
             </form>
         </div>
-        
+
         <div class="card-glass">
             <h4><i class="fas fa-tasks"></i> Active Tasks</h4>
             <div class="row g-3 mt-2">
@@ -362,12 +362,12 @@
             </div>
         </div>
     </div>
-    
+
     <div class="tab-pane fade" id="wallet">
         <div class="card-glass">
             <h4><i class="fas fa-wallet"></i> TON Wallet Configuration</h4>
             <p class="text-muted mt-3">Connect your TON wallet to receive payments from shop item sales.</p>
-            
+
             {% if bot.ton_wallet %}
             <div class="alert alert-success mt-3">
                 <i class="fas fa-check-circle"></i> Wallet Connected: <strong>{{ bot.ton_wallet }}</strong>
@@ -377,11 +377,11 @@
                 <i class="fas fa-exclamation-triangle"></i> No wallet connected. Connect your wallet to receive payments.
             </div>
             {% endif %}
-            
+
             <form id="tonWalletForm" class="mt-4">
                 <div class="mb-3">
                     <label class="form-label">TON Wallet Address</label>
-                    <input type="text" class="form-control" name="wallet_address" 
+                    <input type="text" class="form-control" name="wallet_address"
                            placeholder="UQxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
                            value="{{ bot.ton_wallet if bot.ton_wallet else '' }}">
                     <small class="form-text text-muted">Enter your TON wallet address (starts with UQ)</small>
@@ -390,7 +390,7 @@
                     <i class="fas fa-save"></i> Save Wallet Address
                 </button>
             </form>
-            
+
             <div class="mt-4">
                 <h5>How to get a TON wallet:</h5>
                 <ol class="text-muted">
@@ -421,7 +421,7 @@ document.getElementById('aiSettingsForm').addEventListener('submit', async (e) =
     e.preventDefault();
     const formData = new FormData(e.target);
     formData.append('enabled', document.getElementById('aiEnabled').checked);
-    
+
     try {
         const response = await fetch(`/bot/${botId}/toggle-ai`, { method: 'POST', body: formData });
         const data = await response.json();
@@ -440,11 +440,11 @@ function handleFormSubmit(url, successMsg) {
     return async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
-        
+
         try {
             const response = await fetch(url, { method: 'POST', body: formData });
             const data = await response.json();
-            
+
             if (data.success) {
                 showNotification(successMsg, 'success');
                 setTimeout(() => location.reload(), 1000);
@@ -474,7 +474,7 @@ function showDeleteCommandConfirm(cmdId, commandName) {
         existingConfirm.remove();
         return;
     }
-    
+
     const confirmDiv = document.createElement('td');
     confirmDiv.setAttribute('colspan', '4');
     confirmDiv.className = 'delete-confirmation';
@@ -489,7 +489,7 @@ function showDeleteCommandConfirm(cmdId, commandName) {
             </button>
         </div>
     `;
-    
+
     const newRow = document.createElement('tr');
     newRow.appendChild(confirmDiv);
     row.after(newRow);
@@ -517,7 +517,7 @@ function showDeleteShopItemConfirm(itemId, itemName) {
         existingConfirm.remove();
         return;
     }
-    
+
     const confirmDiv = document.createElement('div');
     confirmDiv.className = 'delete-confirmation mt-2';
     confirmDiv.innerHTML = `
@@ -531,7 +531,7 @@ function showDeleteShopItemConfirm(itemId, itemName) {
             </button>
         </div>
     `;
-    
+
     card.querySelector('.shop-item-card').appendChild(confirmDiv);
 }
 
@@ -557,7 +557,7 @@ function showDeleteTaskConfirm(taskId, taskName) {
         existingConfirm.remove();
         return;
     }
-    
+
     const confirmDiv = document.createElement('div');
     confirmDiv.className = 'delete-confirmation mt-2';
     confirmDiv.innerHTML = `
@@ -571,7 +571,7 @@ function showDeleteTaskConfirm(taskId, taskName) {
             </button>
         </div>
     `;
-    
+
     card.querySelector('.task-card').appendChild(confirmDiv);
 }
 
@@ -593,19 +593,19 @@ async function confirmDeleteTask(taskId) {
 function showEditCommandForm(cmdId, command, responseType, responseContent, urlLink, buttonText) {
     const row = document.getElementById(`cmd-row-${cmdId}`);
     const existingEdit = row.nextElementSibling;
-    
+
     if (existingEdit && existingEdit.classList.contains('edit-command-row')) {
         existingEdit.remove();
         return;
     }
-    
+
     // Escape HTML for safe insertion
     const escapeHtml = (text) => {
         const div = document.createElement('div');
         div.textContent = text || '';
         return div.innerHTML;
     };
-    
+
     const editRow = document.createElement('tr');
     editRow.className = 'edit-command-row';
     editRow.innerHTML = `
@@ -647,17 +647,17 @@ function showEditCommandForm(cmdId, command, responseType, responseContent, urlL
             </form>
         </td>
     `;
-    
+
     row.after(editRow);
-    
+
     document.getElementById(`editCommandForm-${cmdId}`).addEventListener('submit', async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
-        
+
         try {
             const response = await fetch(`/bot/${botId}/update-command`, { method: 'POST', body: formData });
             const data = await response.json();
-            
+
             if (data.success) {
                 showNotification('Command updated', 'success');
                 setTimeout(() => location.reload(), 1000);
@@ -674,7 +674,7 @@ function toggleEditUrlFields(cmdId) {
     const responseType = document.getElementById(`editResponseType-${cmdId}`).value;
     const urlButtonFields = document.getElementById(`editUrlButtonFields-${cmdId}`);
     const urlLinkField = document.getElementById(`editUrlLinkField-${cmdId}`);
-    
+
     if (responseType === 'url_button') {
         urlButtonFields.style.display = 'block';
         urlLinkField.style.display = 'block';

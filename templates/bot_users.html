@@ -190,3 +190,71 @@ async function viewUserDetail(telegramUserId) {
 }
 </script>
 {% endblock %}
+{% extends "base.html" %}
+
+{% block title %}Users - {{ bot.bot_name }}{% endblock %}
+
+{% block content %}
+<div class="bot-detail-header mb-4">
+    <div>
+        <h1><i class="fas fa-users"></i> Bot Users</h1>
+        <p class="text-muted">{{ bot.bot_name }} - @{{ bot.bot_username }}</p>
+    </div>
+    <div>
+        <a href="{{ url_for('bot_detail', bot_id=bot.id) }}" class="btn btn-outline-light">
+            <i class="fas fa-arrow-left"></i> Back to Bot
+        </a>
+    </div>
+</div>
+
+<div class="card-glass">
+    <h4><i class="fas fa-list"></i> Unique Users ({{ users|length }})</h4>
+    <div class="table-responsive mt-3">
+        <table class="table table-dark table-hover">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Balance</th>
+                    <th>Total Taps</th>
+                    <th>Level</th>
+                    <th>Interactions</th>
+                    <th>Last Seen</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if users %}
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.telegram_user_id }}</td>
+                        <td>{{ user.coin_balance }} 💎</td>
+                        <td>{{ user.total_taps }}</td>
+                        <td>{{ user.level }}</td>
+                        <td>{{ user.total_interactions }}</td>
+                        <td>{{ user.last_seen or 'Never' }}</td>
+                        <td>
+                            <a href="{{ url_for('user_detail', bot_id=bot.id, telegram_user_id=user.telegram_user_id) }}" 
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-eye"></i> View Details
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted">No users yet</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+.bot-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+</style>
+{% endblock %}

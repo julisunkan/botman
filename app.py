@@ -372,6 +372,35 @@ def bot_users(bot_id):
     if not bot or bot['user_id'] != session['user_id']:
         return redirect(url_for('dashboard'))
     
+    from utils.database import get_bot_unique_users
+    users = get_bot_unique_users(bot_id)
+    
+    return render_template('bot_users.html', bot=dict(bot), users=users)
+
+@app.route('/bot/<int:bot_id>/user/<int:telegram_user_id>')
+@login_required
+def user_detail(bot_id, telegram_user_id):
+    bot = get_bot_by_id(bot_id)
+    if not bot or bot['user_id'] != session['user_id']:
+        return redirect(url_for('dashboard'))
+    
+    from utils.database import get_user_analytics
+    user_progress = get_or_create_user_progress(bot_id, telegram_user_id)
+    user_analytics = get_user_analytics(bot_id, telegram_user_id)
+    
+    return render_template('user_detail.html', 
+                         bot=dict(bot), 
+                         telegram_user_id=telegram_user_id,
+                         user_progress=dict(user_progress),
+                         analytics=user_analytics)
+
+@app.route('/bot/<int:bot_id>/users')
+@login_required
+def bot_users(bot_id):
+    bot = get_bot_by_id(bot_id)
+    if not bot or bot['user_id'] != session['user_id']:
+        return redirect(url_for('dashboard'))
+    
     users = get_bot_users_list(bot_id)
     return render_template('bot_users.html', bot=dict(bot), users=users)
 

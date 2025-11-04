@@ -1,0 +1,127 @@
+
+{% extends "base.html" %}
+
+{% block title %}User {{ telegram_user_id }} - {{ bot.bot_name }}{% endblock %}
+
+{% block content %}
+<div class="bot-detail-header mb-4">
+    <div>
+        <h1><i class="fas fa-user"></i> User Details</h1>
+        <p class="text-muted">Telegram ID: {{ telegram_user_id }}</p>
+    </div>
+    <div>
+        <a href="{{ url_for('bot_users', bot_id=bot.id) }}" class="btn btn-outline-light">
+            <i class="fas fa-arrow-left"></i> Back to Users
+        </a>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="stat-card">
+            <i class="fas fa-coins fa-2x"></i>
+            <h3>{{ user_progress.coin_balance }}</h3>
+            <p>Coin Balance</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <i class="fas fa-bolt fa-2x"></i>
+            <h3>{{ user_progress.energy }}</h3>
+            <p>Energy</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <i class="fas fa-hand-pointer fa-2x"></i>
+            <h3>{{ user_progress.total_taps }}</h3>
+            <p>Total Taps</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <i class="fas fa-level-up-alt fa-2x"></i>
+            <h3>{{ user_progress.level }}</h3>
+            <p>Level</p>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card-glass">
+            <h4><i class="fas fa-chart-bar"></i> Activity Stats</h4>
+            <table class="table table-dark table-borderless mt-3">
+                <tr>
+                    <td><strong>Messages Sent:</strong></td>
+                    <td>{{ analytics.message_count }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Commands Used:</strong></td>
+                    <td>{{ analytics.command_count }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Total Taps:</strong></td>
+                    <td>{{ analytics.tap_count }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Referred By:</strong></td>
+                    <td>{{ user_progress.referred_by or 'None' }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Last Tap:</strong></td>
+                    <td>{{ user_progress.last_tap_time or 'Never' }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card-glass">
+            <h4><i class="fas fa-history"></i> Recent Activity</h4>
+            <div class="table-responsive mt-3" style="max-height: 500px; overflow-y: auto;">
+                <table class="table table-dark table-hover">
+                    <thead>
+                        <tr>
+                            <th>Event Type</th>
+                            <th>Details</th>
+                            <th>Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if analytics.events %}
+                            {% for event in analytics.events %}
+                            <tr>
+                                <td>
+                                    <span class="badge 
+                                        {% if event.event_type == 'message' %}bg-primary
+                                        {% elif event.event_type == 'command' %}bg-success
+                                        {% elif event.event_type == 'tap' %}bg-info
+                                        {% else %}bg-secondary{% endif %}">
+                                        {{ event.event_type }}
+                                    </span>
+                                </td>
+                                <td>{{ event.event_data or '-' }}</td>
+                                <td>{{ event.timestamp }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted">No recent activity</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.bot-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+</style>
+{% endblock %}

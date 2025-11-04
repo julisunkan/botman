@@ -222,6 +222,12 @@ def update_bot_ton_wallet(bot_id, ton_wallet_address):
     conn.commit()
     conn.close()
 
+def update_bot_ton_wallet(bot_id, ton_wallet_address):
+    conn = get_db_connection()
+    conn.execute('UPDATE bots SET ton_wallet = ? WHERE id = ?', (ton_wallet_address, bot_id))
+    conn.commit()
+    conn.close()
+
 def get_bot_commands(bot_id):
     conn = get_db_connection()
     commands = conn.execute('SELECT * FROM commands WHERE bot_id = ? ORDER BY command',
@@ -397,9 +403,8 @@ def get_bot_analytics(bot_id):
         'command_stats': command_stats
     }
 
-def get_bot_users_list(bot_id):
+def get_bot_unique_users(bot_id):
     conn = get_db_connection()
-    
     users = conn.execute('''
         SELECT 
             up.telegram_user_id,
@@ -407,52 +412,46 @@ def get_bot_users_list(bot_id):
             up.energy,
             up.total_taps,
             up.level,
-            up.last_tap_time,
+            up.referred_by,
             COUNT(DISTINCT a.id) as total_interactions,
-            MIN(a.timestamp) as first_seen,
             MAX(a.timestamp) as last_seen
         FROM user_progress up
-        LEFT JOIN analytics a ON a.bot_id = up.bot_id AND a.telegram_user_id = up.telegram_user_id
+        LEFT JOIN analytics a ON up.bot_id = a.bot_id AND up.telegram_user_id = a.telegram_user_id
         WHERE up.bot_id = ?
         GROUP BY up.telegram_user_id
         ORDER BY last_seen DESC
     ''', (bot_id,)).fetchall()
-    
     conn.close()
     return users
 
-def get_user_detail(bot_id, telegram_user_id):
+def get_user_analytics(bot_id, telegram_user_id):
     conn = get_db_connection()
     
-    # Get user progress
-    progress = conn.execute(
-        'SELECT * FROM user_progress WHERE bot_id = ? AND telegram_user_id = ?',
-        (bot_id, telegram_user_id)
-    ).fetchone()
-    
-    # Get user activity
-    activities = conn.execute('''
-        SELECT event_type, event_data, timestamp 
-        FROM analytics 
+    events = conn.execute('''
+        SELECT event_type, event_data, timestamp
+        FROM analytics
         WHERE bot_id = ? AND telegram_user_id = ?
         ORDER BY timestamp DESC
         LIMIT 50
     ''', (bot_id, telegram_user_id)).fetchall()
     
-    # Get interaction stats
-    stats = conn.execute('''
-        SELECT 
-            event_type,
-            COUNT(*) as count
-        FROM analytics
-        WHERE bot_id = ? AND telegram_user_id = ?
-        GROUP BY event_type
-    ''', (bot_id, telegram_user_id)).fetchall()
+    message_count = conn.execute(
+        'SELECT COUNT(*) as count FROM analytics WHERE bot_id = ? AND telegram_user_id = ? AND event_type = "message"',
+        (bot_id, telegram_user_id)).fetchone()['count']
+    
+    command_count = conn.execute(
+        'SELECT COUNT(*) as count FROM analytics WHERE bot_id = ? AND telegram_user_id = ? AND event_type = "command"',
+        (bot_id, telegram_user_id)).fetchone()['count']
+    
+    tap_count = conn.execute(
+        'SELECT COUNT(*) as count FROM analytics WHERE bot_id = ? AND telegram_user_id = ? AND event_type = "tap"',
+        (bot_id, telegram_user_id)).fetchone()['count']
     
     conn.close()
     
     return {
-        'progress': dict(progress) if progress else None,
-        'activities': [dict(a) for a in activities],
-        'stats': [dict(s) for s in stats]
+        'events': events,
+        'message_count': message_count,
+        'command_count': command_count,
+        'tap_count': tap_count
     }
