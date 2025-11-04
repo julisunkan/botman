@@ -380,6 +380,22 @@ body {
     background: rgba(59, 130, 246, 0.1);
 }
 
+.delete-confirmation {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid var(--danger);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.delete-confirmation p {
+    margin: 0;
+}
+
+.delete-confirmation .text-muted {
+    font-size: 0.875rem;
+}
+
 @keyframes fadeInDown {
     from {
         transform: translateY(-20px);
