@@ -414,27 +414,14 @@ def user_detail(bot_id, telegram_user_id):
 
 @app.route('/bot/<int:bot_id>/webapp', defaults={'webapp_type': 'mining'})
 @app.route('/bot/<int:bot_id>/webapp/', defaults={'webapp_type': 'mining'})
-@app.route('/bot/<int:bot_id>/webapp/<path:webapp_type>')
+@app.route('/bot/<int:bot_id>/webapp/<webapp_type>')
+@app.route('/bot/<int:bot_id>/webapp/<webapp_type>/')
 def webapp(bot_id, webapp_type):
     bot = get_bot_by_id(bot_id)
     if not bot:
         return "Bot not found", 404
     
     telegram_user_id = request.args.get('user_id', 12345)
-    
-    # Check if it's a custom webapp
-    if webapp_type.startswith('custom_'):
-        custom_template = f'custom_webapps/webapp_{webapp_type}.html'
-        if os.path.exists(os.path.join('templates', custom_template)):
-            mining_settings = get_mining_settings(bot_id)
-            shop_items = get_shop_items(bot_id)
-            tasks = get_tasks(bot_id)
-            return render_template(custom_template,
-                                 bot=dict(bot),
-                                 mining_settings=mining_settings,
-                                 shop_items=shop_items,
-                                 tasks=tasks,
-                                 telegram_user_id=telegram_user_id)
     
     if webapp_type == 'ai':
         return render_template('webapp_ai.html', 
@@ -734,82 +721,6 @@ def import_template():
         save_mining_settings(bot_id, template['mining_settings'])
     
     return jsonify({'success': True, 'message': 'Template imported successfully'})
-
-@app.route('/bot/<int:bot_id>/export-webapp/<webapp_type>')
-@login_required
-def export_webapp(bot_id, webapp_type):
-    bot = get_bot_by_id(bot_id)
-    if not bot or bot['user_id'] != session['user_id']:
-        return jsonify({'success': False, 'message': 'Unauthorized'}), 403
-    
-    # Map webapp types to template files
-    webapp_files = {
-        'mining': 'webapp.html',
-        'ai': 'webapp_ai.html',
-        'payment': 'webapp_payment.html',
-        'quiz': 'webapp_quiz.html',
-        'news': 'webapp_news.html',
-        'referral': 'webapp_referral.html',
-        'fitness': 'webapp_fitness.html',
-        'event': 'webapp_event.html'
-    }
-    
-    template_file = webapp_files.get(webapp_type, 'webapp.html')
-    template_path = os.path.join('templates', template_file)
-    
-    if not os.path.exists(template_path):
-        return jsonify({'success': False, 'message': 'Template not found'}), 404
-    
-    with open(template_path, 'r') as f:
-        content = f.read()
-    
-    from flask import send_file
-    from io import BytesIO
-    
-    # Create a BytesIO object to send the file
-    file_obj = BytesIO(content.encode('utf-8'))
-    file_obj.seek(0)
-    
-    return send_file(
-        file_obj,
-        mimetype='text/html',
-        as_attachment=True,
-        download_name=f'{webapp_type}_webapp.html'
-    )
-
-@app.route('/bot/<int:bot_id>/upload-webapp', methods=['POST'])
-@login_required
-def upload_webapp(bot_id):
-    bot = get_bot_by_id(bot_id)
-    if not bot or bot['user_id'] != session['user_id']:
-        return jsonify({'success': False, 'message': 'Unauthorized'}), 403
-    
-    if 'webapp_file' not in request.files:
-        return jsonify({'success': False, 'message': 'No file uploaded'}), 400
-    
-    file = request.files['webapp_file']
-    webapp_type = request.form.get('webapp_type', 'custom')
-    
-    if file.filename == '':
-        return jsonify({'success': False, 'message': 'No file selected'}), 400
-    
-    if not file.filename.endswith('.html'):
-        return jsonify({'success': False, 'message': 'Only HTML files are allowed'}), 400
-    
-    # Create custom webapps directory if it doesn't exist
-    custom_dir = f'templates/custom_webapps'
-    os.makedirs(custom_dir, exist_ok=True)
-    
-    # Save with bot_id prefix to avoid conflicts
-    filename = f'webapp_custom_{bot_id}_{webapp_type}.html'
-    file_path = os.path.join(custom_dir, filename)
-    file.save(file_path)
-    
-    return jsonify({
-        'success': True, 
-        'message': 'Webapp template uploaded successfully',
-        'webapp_type': f'custom_{bot_id}_{webapp_type}'
-    })
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
