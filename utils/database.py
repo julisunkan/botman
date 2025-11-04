@@ -222,12 +222,6 @@ def update_bot_ton_wallet(bot_id, ton_wallet_address):
     conn.commit()
     conn.close()
 
-def update_bot_ton_wallet(bot_id, ton_wallet_address):
-    conn = get_db_connection()
-    conn.execute('UPDATE bots SET ton_wallet = ? WHERE id = ?', (ton_wallet_address, bot_id))
-    conn.commit()
-    conn.close()
-
 def get_bot_commands(bot_id):
     conn = get_db_connection()
     commands = conn.execute('SELECT * FROM commands WHERE bot_id = ? ORDER BY command',
