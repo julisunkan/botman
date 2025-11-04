@@ -1,0 +1,485 @@
+
+# Build Full-Stack Flask SQLite BotForge Pro - Telegram Bot Creator Web App
+
+## Project Overview
+Build a comprehensive web application called "BotForge Pro" that allows users to create, manage, and deploy Telegram bots with advanced features including AI integration, mini-apps, payment processing, and analytics.
+
+## Tech Stack
+- **Backend**: Flask (Python 3.11+)
+- **Database**: SQLite with encrypted bot tokens (using Fernet/AES-128)
+- **Frontend**: Bootstrap 5, JavaScript (ES6+)
+- **AI Integration**: Google Gemini API
+- **Payment**: TON Blockchain integration
+- **PWA**: Service Workers, Web Manifest
+- **Authentication**: Session-based with hashed passwords (Werkzeug)
+
+## Core Features Required
+
+### 1. User Authentication System
+- Registration with username, email, password
+- Login with session management
+- Password hashing using Werkzeug security
+- Session secret key (auto-generated or from environment)
+- Logout functionality
+
+### 2. Dashboard
+- Display user's bots in card format
+- Show bot statistics (messages sent, users, commands)
+- Quick actions: Create Bot, View Analytics, Settings
+- Animated counters for statistics
+- Responsive grid layout
+
+### 3. Bot Management
+
+#### Create Bot
+- Bot name input
+- Bot token from @BotFather
+- Bot description
+- Optional template selection from library
+- Token encryption before storage
+- Automatic webhook setup
+
+#### Bot Detail Page
+Features organized in tabs:
+- **Overview**: Bot stats, webhook status, bot info
+- **Commands**: Add/edit/delete custom commands
+- **AI Settings**: Gemini API integration toggle
+- **Mining Settings**: Configure tap-to-earn game
+- **Tasks**: Create social tasks with rewards
+- **Shop**: Digital products with TON payment
+- **Analytics**: User engagement metrics
+
+#### Command System
+- Command name (without /)
+- Response types: text, photo, url_button
+- Text responses with multi-line support
+- Photo URLs for image responses
+- URL buttons with custom text and links
+- Edit and delete existing commands
+- Inline notifications for all actions
+
+#### Mining/Tap-to-Earn Game
+- Customizable coin name and symbol
+- Energy system (max energy, recharge rate)
+- Tap rewards configuration
+- Boost items (energy limit, multi-tap, recharge speed)
+- UI customization (colors, background)
+- Shop items with prices in game currency or TON
+- Social tasks with coin/energy rewards
+- Leaderboard system
+- Referral program
+
+### 4. Template Library
+Pre-built bot templates:
+- AI Chatbot (Gemini integration)
+- Coin Mining/Tap-to-Earn
+- Payment Bot (TON integration)
+- NFT Verification
+- Referral System
+- Airdrop Manager
+- Game Creator
+- WebApp Creator
+
+Each template includes:
+- Commands with responses
+- Bot description
+- Category
+- Settings/configuration
+- Import functionality
+
+### 5. AI Integration
+- Google Gemini API integration
+- Toggle AI mode per bot
+- Fallback to commands when AI disabled
+- Context-aware responses
+- Error handling for API failures
+
+### 6. TON Blockchain Integration
+- Wallet connection via Telegram WebApp
+- Payment processing for shop items
+- Transaction verification
+- Balance display
+- Withdrawal functionality
+
+### 7. Analytics Dashboard
+- Total messages sent/received
+- Active users count
+- Command usage statistics
+- Charts and graphs (Chart.js recommended)
+- Time-based filtering
+- Export functionality
+
+### 8. Telegram Mini-App (WebApp)
+- Mining interface with tap mechanics
+- Energy bar visualization
+- Coin balance display
+- Tabs: Mine, Boost, Shop, Tasks, Friends, Wallet, Leaderboard
+- Real-time updates
+- Responsive design for mobile
+- Inline display in Telegram
+
+### 9. Progressive Web App (PWA)
+- Service Worker for offline functionality
+- Web App Manifest
+- Icons in multiple sizes (72x72 to 512x512)
+- Maskable icons for adaptive icons
+- Install prompt
+- Caching strategy
+
+## Database Schema
+
+### Users Table
+- id (PRIMARY KEY)
+- username (UNIQUE)
+- email (UNIQUE)
+- password (hashed)
+- created_at (TIMESTAMP)
+
+### Bots Table
+- id (PRIMARY KEY)
+- user_id (FOREIGN KEY)
+- bot_name
+- bot_token (encrypted)
+- bot_username
+- description
+- webhook_url
+- is_active (BOOLEAN)
+- ai_enabled (BOOLEAN)
+- gemini_api_key (encrypted, optional)
+- created_at
+
+### Commands Table
+- id (PRIMARY KEY)
+- bot_id (FOREIGN KEY)
+- command (e.g., 'start', 'help')
+- response_type ('text', 'photo', 'url_button')
+- response_content (TEXT)
+- url_link (optional)
+- button_text (optional)
+
+### MiningSettings Table
+- id (PRIMARY KEY)
+- bot_id (FOREIGN KEY, UNIQUE)
+- coin_name
+- coin_symbol
+- initial_balance
+- tap_reward
+- max_energy
+- energy_recharge_rate
+- primary_color
+- secondary_color
+- text_color
+- background_color
+- background_image_url
+
+### ShopItems Table
+- id (PRIMARY KEY)
+- bot_id (FOREIGN KEY)
+- item_name
+- item_description
+- price
+- currency ('coins', 'TON', 'USDT')
+- reward_amount (optional)
+- reward_type ('coins', 'energy')
+- is_active
+
+### Tasks Table
+- id (PRIMARY KEY)
+- bot_id (FOREIGN KEY)
+- task_name
+- task_description
+- task_type ('telegram', 'social', 'referral')
+- reward_amount
+- reward_type ('coins', 'energy')
+- requirement_value (e.g., channel URL)
+- is_active
+
+### UserProgress Table
+- id (PRIMARY KEY)
+- bot_id (FOREIGN KEY)
+- telegram_user_id
+- coin_balance
+- energy
+- last_tap_time
+- total_taps
+- level
+- referral_code
+- referred_by
+
+### Analytics Table
+- id (PRIMARY KEY)
+- bot_id (FOREIGN KEY)
+- telegram_user_id
+- event_type ('message', 'command', 'tap', 'purchase')
+- event_data (JSON)
+- timestamp
+
+## API Routes
+
+### Authentication
+- POST /register - User registration
+- POST /login - User login
+- GET /logout - User logout
+
+### Dashboard
+- GET / - Redirect to dashboard or login
+- GET /dashboard - Main dashboard
+
+### Bot Management
+- GET /create-bot - Create bot page
+- POST /create-bot - Create new bot
+- GET /bot/<bot_id> - Bot detail page
+- POST /bot/<bot_id>/delete - Delete bot
+- POST /bot/<bot_id>/setup-webhook - Setup Telegram webhook
+- POST /bot/<bot_id>/toggle-ai - Enable/disable AI
+
+### Commands
+- POST /bot/<bot_id>/add-command - Add command
+- POST /bot/<bot_id>/update-command - Update command
+- POST /bot/<bot_id>/delete-command - Delete command
+
+### Mining Settings
+- GET /bot/<bot_id>/mining-settings - Mining settings page
+- POST /bot/<bot_id>/save-mining-settings - Save settings
+- POST /bot/<bot_id>/add-shop-item - Add shop item
+- POST /bot/<bot_id>/update-shop-item - Update shop item
+- POST /bot/<bot_id>/delete-shop-item - Delete shop item
+- POST /bot/<bot_id>/add-task - Add task
+- POST /bot/<bot_id>/update-task - Update task
+- POST /bot/<bot_id>/delete-task - Delete task
+
+### Telegram WebApp
+- GET /bot/<bot_id>/webapp - Mining web app interface
+- POST /bot/<bot_id>/tap - Process tap action
+- POST /bot/<bot_id>/purchase-boost - Purchase boost
+- POST /bot/<bot_id>/purchase-item - Purchase shop item
+- POST /bot/<bot_id>/complete-task - Complete task
+- GET /bot/<bot_id>/leaderboard - Get leaderboard data
+
+### Telegram Webhook
+- POST /webhook/<bot_id> - Receive Telegram updates
+
+### Templates
+- GET /templates - Template library
+- POST /import-template - Import template
+- GET /template/<template_id> - View template
+- POST /template/<template_id>/edit - Edit custom template
+
+### Analytics
+- GET /bot/<bot_id>/analytics - Analytics page
+- GET /bot/<bot_id>/analytics/data - Analytics JSON data
+
+## Telegram Bot Functionality
+
+### Message Handling
+- Process incoming messages
+- Match commands
+- Execute command responses
+- Send text, photos, or URL buttons
+- Handle callback queries from inline buttons
+- AI fallback when enabled
+
+### Webhook Setup
+- Register webhook with Telegram
+- Validate bot token
+- Handle webhook verification
+- Process updates asynchronously
+
+### Special Commands
+- /start - Welcome message, initialize user
+- /menu - Inline keyboard with common actions
+- /profile - User stats with placeholders
+- /webapp - Launch mini-app
+- Custom commands from database
+
+## UI/UX Requirements
+
+### Design Theme
+- Dark theme (#1a1a2e background)
+- Gradient accents (purple to pink)
+- Glassmorphism effects
+- Smooth animations
+- Responsive design (mobile-first)
+
+### Components
+- Navigation bar with logo
+- Sidebar for settings (optional)
+- Modal dialogs for forms
+- Toast/inline notifications (no alerts/popups)
+- Loading states
+- Error states
+- Empty states with CTAs
+
+### Notifications
+- Inline notifications only (no browser alerts)
+- Success (green), Error (red), Info (blue)
+- Auto-dismiss after 5 seconds
+- Positioned at top of viewport
+- Smooth fade in/out
+
+### Forms
+- Client-side validation
+- Server-side validation
+- Clear error messages
+- Success confirmations
+- Loading states on submit
+
+## Security Features
+
+### Token Encryption
+- Fernet (AES-128) encryption for bot tokens
+- Encryption key stored in .encryption_key file
+- Key auto-generated on first run
+- Decrypt only when needed
+
+### Password Security
+- Werkzeug password hashing
+- Minimum password requirements
+- Session-based authentication
+- CSRF protection (Flask-WTF recommended)
+
+### API Security
+- Validate Telegram webhook requests
+- Rate limiting (optional)
+- SQL injection prevention (parameterized queries)
+- XSS prevention (template escaping)
+
+## File Structure
+```
+├── app.py                      # Main Flask application
+├── utils/
+│   ├── database.py            # Database operations
+│   ├── telegram_api.py        # Telegram Bot API wrapper
+│   ├── ai.py                  # Gemini AI integration
+│   ├── crypto.py              # Encryption utilities
+│   ├── telegram_auth.py       # Telegram WebApp auth
+│   └── ton_payment.py         # TON payment processing
+├── templates/
+│   ├── base.html              # Base template with navbar
+│   ├── index.html             # Landing page
+│   ├── login.html             # Login page
+│   ├── dashboard.html         # Main dashboard
+│   ├── create_bot.html        # Create bot form
+│   ├── bot_detail.html        # Bot management
+│   ├── mining_settings.html   # Mining configuration
+│   ├── analytics.html         # Analytics dashboard
+│   ├── marketplace.html       # Template library
+│   ├── webapp.html            # Mining web app
+│   └── settings.html          # User settings
+├── templates_library/
+│   ├── ai_chatbot.json
+│   ├── coin_mining.json
+│   ├── payment.json
+│   └── [other templates].json
+├── static/
+│   ├── css/
+│   │   └── style.css          # Main stylesheet
+│   ├── js/
+│   │   └── main.js            # Main JavaScript
+│   ├── icons/                 # PWA icons
+│   ├── manifest.json          # PWA manifest
+│   └── service-worker.js      # Service worker
+├── requirements.txt           # Python dependencies
+├── .encryption_key           # Auto-generated encryption key
+└── botforge.db               # SQLite database
+```
+
+## Dependencies (requirements.txt)
+```
+Flask==3.0.0
+Werkzeug==3.0.1
+requests==2.31.0
+cryptography==41.0.7
+google-generativeai==0.3.2
+openpyxl==3.1.2
+reportlab==4.0.7
+```
+
+## Environment Variables (Optional)
+- SESSION_SECRET - Flask session secret
+- GEMINI_API_KEY - Default Gemini API key
+
+## Key Implementation Details
+
+### Database Initialization
+- Create tables on first run
+- Foreign key constraints enabled
+- Indexes on frequently queried columns
+- Proper CASCADE deletes
+
+### Error Handling
+- Try-catch blocks for all external API calls
+- User-friendly error messages
+- Logging for debugging
+- Graceful degradation
+
+### Performance
+- Lazy loading for large datasets
+- Pagination for lists
+- Efficient database queries
+- Caching where appropriate
+
+### Testing
+- Webhook setup verification
+- Command response testing
+- Payment flow testing
+- AI integration testing
+
+## Deployment (on Replit)
+- Use 0.0.0.0 for host binding
+- Port 5000 for web server
+- Automatic HTTPS in production
+- Environment variables in Secrets
+- SQLite database persistence
+- Static file serving
+
+## Additional Features
+
+### Export/Import
+- Export bot configuration as JSON
+- Import from template library
+- Share custom templates
+
+### Webhooks & Callbacks
+- Telegram webhook handling
+- Payment callbacks
+- Task verification callbacks
+
+### Admin Features
+- User management (optional)
+- Bot monitoring
+- Usage statistics
+- Template approval (for marketplace)
+
+## Success Criteria
+- Users can register and login
+- Create bots with Telegram token
+- Add custom commands that work
+- Deploy mining mini-app in Telegram
+- Process payments via TON
+- View analytics and statistics
+- Import pre-built templates
+- AI responses work correctly
+- All inline notifications work
+- No browser alerts/popups anywhere
+- PWA installs on mobile
+- Responsive on all devices
+
+## Development Steps
+1. Set up Flask app with authentication
+2. Create database schema and initialization
+3. Implement bot CRUD operations
+4. Build Telegram webhook handler
+5. Add command management
+6. Integrate Gemini AI
+7. Build mining mini-app
+8. Add TON payment integration
+9. Create analytics system
+10. Build template library
+11. Implement PWA features
+12. Add inline notifications throughout
+13. Style with dark theme and animations
+14. Test all features end-to-end
+15. Deploy on Replit
+
+This prompt provides everything needed to rebuild BotForge Pro from scratch with all its features, security, and functionality intact.
