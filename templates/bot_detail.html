@@ -158,11 +158,14 @@
                     </thead>
                     <tbody>
                         {% for cmd in commands %}
-                        <tr>
+                        <tr id="cmd-row-{{ cmd.id }}">
                             <td>/{{ cmd.command }}</td>
                             <td><span class="badge bg-info">{{ cmd.response_type }}</span></td>
                             <td>{{ cmd.response_content[:50] }}{% if cmd.response_content|length > 50 %}...{% endif %}</td>
                             <td>
+                                <button class="btn btn-sm btn-outline-primary me-2" onclick="showEditCommandForm({{ cmd.id }}, '{{ cmd.command }}', '{{ cmd.response_type }}', {{ cmd.response_content|tojson }}, {{ cmd.url_link|tojson }}, {{ cmd.button_text|tojson }})">
+                                    <i class="fas fa-edit"></i>
+                                </button>
                                 <button class="btn btn-sm btn-outline-danger" onclick="showDeleteCommandConfirm({{ cmd.id }}, '{{ cmd.command }}')">
                                     <i class="fas fa-trash"></i>
                                 </button>
@@ -578,6 +581,92 @@ async function confirmDeleteTask(taskId) {
         }
     } catch (error) {
         showNotification('An error occurred', 'error');
+    }
+}
+
+function showEditCommandForm(cmdId, command, responseType, responseContent, urlLink, buttonText) {
+    const row = document.getElementById(`cmd-row-${cmdId}`);
+    const existingEdit = row.nextElementSibling;
+    
+    if (existingEdit && existingEdit.classList.contains('edit-command-row')) {
+        existingEdit.remove();
+        return;
+    }
+    
+    const editRow = document.createElement('tr');
+    editRow.className = 'edit-command-row';
+    editRow.innerHTML = `
+        <td colspan="4">
+            <form id="editCommandForm-${cmdId}" class="p-3 bg-dark">
+                <h6 class="mb-3"><i class="fas fa-edit"></i> Edit Command: /${command}</h6>
+                <input type="hidden" name="command_id" value="${cmdId}">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Response Type</label>
+                        <select class="form-select" name="response_type" id="editResponseType-${cmdId}" onchange="toggleEditUrlFields(${cmdId})">
+                            <option value="text" ${responseType === 'text' ? 'selected' : ''}>Text</option>
+                            <option value="photo" ${responseType === 'photo' ? 'selected' : ''}>Photo</option>
+                            <option value="url_button" ${responseType === 'url_button' ? 'selected' : ''}>URL Button</option>
+                        </select>
+                    </div>
+                    <div class="col-md-9">
+                        <label class="form-label">Response Content</label>
+                        <textarea class="form-control" name="response_content" rows="3" required>${responseContent || ''}</textarea>
+                    </div>
+                    <div class="col-md-6" id="editUrlButtonFields-${cmdId}" style="display: ${responseType === 'url_button' ? 'block' : 'none'};">
+                        <label class="form-label">Button Text</label>
+                        <input type="text" class="form-control" name="button_text" value="${buttonText || ''}">
+                    </div>
+                    <div class="col-md-6" id="editUrlLinkField-${cmdId}" style="display: ${responseType === 'url_button' ? 'block' : 'none'};">
+                        <label class="form-label">URL</label>
+                        <input type="text" class="form-control" name="url_link" value="${urlLink || ''}">
+                    </div>
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="this.closest('tr').remove()">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </td>
+    `;
+    
+    row.after(editRow);
+    
+    document.getElementById(`editCommandForm-${cmdId}`).addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        
+        try {
+            const response = await fetch(`/bot/${botId}/update-command`, { method: 'POST', body: formData });
+            const data = await response.json();
+            
+            if (data.success) {
+                showNotification('Command updated', 'success');
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                showNotification(data.message, 'error');
+            }
+        } catch (error) {
+            showNotification('An error occurred', 'error');
+        }
+    });
+}
+
+function toggleEditUrlFields(cmdId) {
+    const responseType = document.getElementById(`editResponseType-${cmdId}`).value;
+    const urlButtonFields = document.getElementById(`editUrlButtonFields-${cmdId}`);
+    const urlLinkField = document.getElementById(`editUrlLinkField-${cmdId}`);
+    
+    if (responseType === 'url_button') {
+        urlButtonFields.style.display = 'block';
+        urlLinkField.style.display = 'block';
+    } else {
+        urlButtonFields.style.display = 'none';
+        urlLinkField.style.display = 'none';
     }
 }
 </script>
