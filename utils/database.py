@@ -396,3 +396,63 @@ def get_bot_analytics(bot_id):
         'unique_users': unique_users,
         'command_stats': command_stats
     }
+
+def get_bot_users_list(bot_id):
+    conn = get_db_connection()
+    
+    users = conn.execute('''
+        SELECT 
+            up.telegram_user_id,
+            up.coin_balance,
+            up.energy,
+            up.total_taps,
+            up.level,
+            up.last_tap_time,
+            COUNT(DISTINCT a.id) as total_interactions,
+            MIN(a.timestamp) as first_seen,
+            MAX(a.timestamp) as last_seen
+        FROM user_progress up
+        LEFT JOIN analytics a ON a.bot_id = up.bot_id AND a.telegram_user_id = up.telegram_user_id
+        WHERE up.bot_id = ?
+        GROUP BY up.telegram_user_id
+        ORDER BY last_seen DESC
+    ''', (bot_id,)).fetchall()
+    
+    conn.close()
+    return users
+
+def get_user_detail(bot_id, telegram_user_id):
+    conn = get_db_connection()
+    
+    # Get user progress
+    progress = conn.execute(
+        'SELECT * FROM user_progress WHERE bot_id = ? AND telegram_user_id = ?',
+        (bot_id, telegram_user_id)
+    ).fetchone()
+    
+    # Get user activity
+    activities = conn.execute('''
+        SELECT event_type, event_data, timestamp 
+        FROM analytics 
+        WHERE bot_id = ? AND telegram_user_id = ?
+        ORDER BY timestamp DESC
+        LIMIT 50
+    ''', (bot_id, telegram_user_id)).fetchall()
+    
+    # Get interaction stats
+    stats = conn.execute('''
+        SELECT 
+            event_type,
+            COUNT(*) as count
+        FROM analytics
+        WHERE bot_id = ? AND telegram_user_id = ?
+        GROUP BY event_type
+    ''', (bot_id, telegram_user_id)).fetchall()
+    
+    conn.close()
+    
+    return {
+        'progress': dict(progress) if progress else None,
+        'activities': [dict(a) for a in activities],
+        'stats': [dict(s) for s in stats]
+    }
