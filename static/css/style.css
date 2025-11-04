@@ -1,12 +1,12 @@
 :root {
-    --bg-dark: #f8fafc;
-    --bg-card: #ffffff;
+    --bg-dark: #0f172a;
+    --bg-card: #1e293b;
     --primary: #9333ea;
     --secondary: #ec4899;
     --success: #10b981;
     --danger: #ef4444;
-    --text-light: #1e293b;
-    --glass-bg: rgba(255, 255, 255, 0.9);
+    --text-light: #f1f5f9;
+    --glass-bg: rgba(30, 41, 59, 0.9);
 }
 
 * {
@@ -16,17 +16,18 @@
 }
 
 body {
-    background: var(--bg-dark);
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    background-attachment: fixed;
     color: var(--text-light);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     min-height: 100vh;
 }
 
 .navbar {
-    background: var(--bg-card) !important;
+    background: rgba(30, 41, 59, 0.8) !important;
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(147, 51, 234, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .navbar-brand {
@@ -88,8 +89,8 @@ body {
     border-radius: 1rem;
     padding: 2rem;
     text-align: center;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    box-shadow: 0 4px 12px rgba(147, 51, 234, 0.2);
     transition: transform 0.3s;
 }
 
@@ -117,8 +118,8 @@ body {
     padding: 3rem;
     width: 100%;
     max-width: 450px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    box-shadow: 0 4px 20px rgba(147, 51, 234, 0.3);
 }
 
 .text-gradient {
@@ -128,25 +129,25 @@ body {
 }
 
 .form-control, .form-select {
-    background: #f1f5f9;
-    border: 1px solid #cbd5e1;
+    background: #0f172a;
+    border: 1px solid rgba(147, 51, 234, 0.3);
     color: var(--text-light);
     padding: 0.75rem;
 }
 
 .form-control:focus, .form-select:focus {
-    background: white;
+    background: #0f172a;
     border-color: var(--primary);
     color: var(--text-light);
-    box-shadow: 0 0 0 0.2rem rgba(147, 51, 234, 0.15);
+    box-shadow: 0 0 0 0.2rem rgba(147, 51, 234, 0.25);
 }
 
 .form-control::placeholder {
-    color: #94a3b8;
+    color: #64748b;
 }
 
 .form-select option {
-    background: white;
+    background: #0f172a;
     color: var(--text-light);
 }
 
@@ -162,14 +163,14 @@ body {
     backdrop-filter: blur(10px);
     border-radius: 1rem;
     overflow: hidden;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    box-shadow: 0 4px 12px rgba(147, 51, 234, 0.2);
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .bot-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 10px 30px rgba(147, 51, 234, 0.4);
 }
 
 .bot-card-header {
@@ -214,10 +215,10 @@ body {
 
 .bot-card-footer {
     padding: 1rem 1.5rem;
-    background: #f8fafc;
+    background: #0f172a;
     display: flex;
     gap: 0.5rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    border-top: 1px solid rgba(147, 51, 234, 0.2);
 }
 
 .empty-state {
@@ -230,8 +231,8 @@ body {
     backdrop-filter: blur(10px);
     border-radius: 1rem;
     padding: 2rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    box-shadow: 0 4px 12px rgba(147, 51, 234, 0.2);
     margin-bottom: 2rem;
 }
 
@@ -249,11 +250,11 @@ body {
 }
 
 .nav-tabs {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(147, 51, 234, 0.3);
 }
 
 .nav-tabs .nav-link {
-    color: #64748b;
+    color: #94a3b8;
     border: none;
     padding: 1rem 1.5rem;
 }
@@ -276,8 +277,8 @@ body {
     border-radius: 1rem;
     padding: 2rem;
     text-align: center;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    box-shadow: 0 4px 12px rgba(147, 51, 234, 0.2);
 }
 
 .stat-card i {
@@ -297,23 +298,23 @@ body {
 }
 
 .table-dark th {
-    border-color: rgba(0, 0, 0, 0.1);
-    background: #f8fafc;
+    border-color: rgba(147, 51, 234, 0.3);
+    background: #0f172a;
 }
 
 .table-dark td {
-    border-color: rgba(0, 0, 0, 0.05);
+    border-color: rgba(147, 51, 234, 0.2);
 }
 
 .table-dark tbody tr:hover {
-    background: #f8fafc;
+    background: rgba(147, 51, 234, 0.1);
 }
 
 .shop-item-card, .task-card {
-    background: #f8fafc;
+    background: #0f172a;
     border-radius: 0.5rem;
     padding: 1rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(147, 51, 234, 0.3);
 }
 
 .template-card {
@@ -321,8 +322,8 @@ body {
     backdrop-filter: blur(10px);
     border-radius: 1rem;
     padding: 2rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    box-shadow: 0 4px 12px rgba(147, 51, 234, 0.2);
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -367,13 +368,13 @@ body {
 }
 
 .inline-message {
-    background: white;
+    background: rgba(30, 41, 59, 0.5);
     backdrop-filter: blur(10px);
     border-radius: 0.5rem;
     padding: 1rem 1.5rem;
     margin-bottom: 1.5rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    box-shadow: 0 4px 12px rgba(147, 51, 234, 0.2);
 }
 
 .inline-message.alert-success {
@@ -431,7 +432,12 @@ body {
 
 .modal-content {
     background: var(--bg-card);
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    color: var(--text-light);
+}
+
+.modal-header, .modal-footer {
+    border-color: rgba(147, 51, 234, 0.2);
 }
 
 .btn-close-white {
