@@ -174,12 +174,12 @@
             <h3 style="margin-bottom:15px">Shop</h3>
             {% if shop_items %}
                 {% for item in shop_items %}
-                <div class="shop-item">
+                <div class="shop-item" id="item-{{ item.id }}">
                     <h4>{{ item.item_name }}</h4>
                     <p style="font-size:14px;opacity:0.8">{{ item.item_description }}</p>
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
                         <strong>{{ item.price }} {{ item.currency }}</strong>
-                        <button class="btn">Buy</button>
+                        <button class="btn" onclick="buyItem({{ item.id }}, '{{ item.currency }}', {{ item.price }})">Buy</button>
                     </div>
                 </div>
                 {% endfor %}
@@ -274,6 +274,55 @@
             
             event.target.classList.add('active');
             document.getElementById('tab-' + tabName).classList.add('active');
+        }
+        
+        async function buyItem(itemId, currency, price) {
+            if (currency === 'coins') {
+                if (coinBalance < price) {
+                    alert('Insufficient coins!');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch(`/bot/${botId}/purchase-item`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            telegram_user_id: telegramUserId,
+                            item_id: itemId
+                        })
+                    });
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        coinBalance = data.coin_balance;
+                        updateUI();
+                        alert('Purchase successful!');
+                    } else {
+                        alert(data.message);
+                    }
+                } catch (error) {
+                    console.error('Error purchasing item:', error);
+                    alert('Purchase failed!');
+                }
+            } else if (currency === 'TON') {
+                const walletAddress = '{{ bot.ton_wallet_address if bot.ton_wallet_address else "" }}';
+                if (!walletAddress) {
+                    alert('TON wallet not configured by bot owner!');
+                    return;
+                }
+                
+                if (window.Telegram && window.Telegram.WebApp) {
+                    window.Telegram.WebApp.openInvoice(`https://app.tonkeeper.com/transfer/${walletAddress}?amount=${price * 1000000000}&text=Shop%20Purchase`, (status) => {
+                        if (status === 'paid') {
+                            alert('Payment successful! Your item will be delivered shortly.');
+                        }
+                    });
+                } else {
+                    const paymentUrl = `https://app.tonkeeper.com/transfer/${walletAddress}?amount=${price * 1000000000}&text=Shop%20Purchase`;
+                    window.open(paymentUrl, '_blank');
+                }
+            }
         }
         
         loadProgress();

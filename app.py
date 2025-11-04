@@ -196,6 +196,21 @@ def toggle_ai_route(bot_id):
     toggle_bot_ai(bot_id, enabled)
     return jsonify({'success': True, 'message': f'AI {"enabled" if enabled else "disabled"}'})
 
+@app.route('/bot/<int:bot_id>/update-ton-wallet', methods=['POST'])
+@login_required
+def update_ton_wallet_route(bot_id):
+    bot = get_bot_by_id(bot_id)
+    if not bot or bot['user_id'] != session['user_id']:
+        return jsonify({'success': False, 'message': 'Unauthorized'}), 403
+    
+    wallet_address = request.form.get('wallet_address', '').strip()
+    
+    if wallet_address and not wallet_address.startswith('UQ'):
+        return jsonify({'success': False, 'message': 'Invalid TON wallet address'}), 400
+    
+    update_bot_ton_wallet(bot_id, wallet_address)
+    return jsonify({'success': True, 'message': 'TON wallet updated successfully'})
+
 @app.route('/bot/<int:bot_id>/add-command', methods=['POST'])
 @login_required
 def add_command_route(bot_id):
@@ -411,6 +426,39 @@ def get_progress(bot_id):
         'energy': progress['energy'],
         'total_taps': progress['total_taps'],
         'level': progress['level']
+    })
+
+@app.route('/bot/<int:bot_id>/purchase-item', methods=['POST'])
+def purchase_item(bot_id):
+    data = request.get_json()
+    telegram_user_id = data.get('telegram_user_id')
+    item_id = data.get('item_id')
+    
+    if not telegram_user_id or not item_id:
+        return jsonify({'success': False, 'message': 'Missing parameters'}), 400
+    
+    shop_items = get_shop_items(bot_id)
+    item = next((i for i in shop_items if i['id'] == item_id), None)
+    
+    if not item:
+        return jsonify({'success': False, 'message': 'Item not found'}), 404
+    
+    if item['currency'] != 'coins':
+        return jsonify({'success': False, 'message': 'This item requires TON payment'}), 400
+    
+    progress = get_or_create_user_progress(bot_id, int(telegram_user_id))
+    
+    if progress['coin_balance'] < item['price']:
+        return jsonify({'success': False, 'message': 'Insufficient coins'}), 400
+    
+    new_balance = progress['coin_balance'] - int(item['price'])
+    update_user_progress(bot_id, int(telegram_user_id), new_balance, progress['energy'], progress['total_taps'])
+    log_analytics_event(bot_id, telegram_user_id, 'shop_purchase', {'item_id': item_id, 'price': item['price']})
+    
+    return jsonify({
+        'success': True,
+        'coin_balance': new_balance,
+        'message': 'Purchase successful!'
     })
 
 @app.route('/webhook/<int:bot_id>', methods=['POST'])

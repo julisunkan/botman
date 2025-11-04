@@ -49,6 +49,11 @@
             <i class="fas fa-tasks"></i> Tasks
         </button>
     </li>
+    <li class="nav-item">
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#wallet">
+            <i class="fas fa-wallet"></i> TON Wallet
+        </button>
+    </li>
 </ul>
 
 <div class="tab-content">
@@ -348,6 +353,47 @@
             </div>
         </div>
     </div>
+    
+    <div class="tab-pane fade" id="wallet">
+        <div class="card-glass">
+            <h4><i class="fas fa-wallet"></i> TON Wallet Configuration</h4>
+            <p class="text-muted mt-3">Connect your TON wallet to receive payments from shop item sales.</p>
+            
+            {% if bot.ton_wallet_address %}
+            <div class="alert alert-success mt-3">
+                <i class="fas fa-check-circle"></i> Wallet Connected: <strong>{{ bot.ton_wallet_address }}</strong>
+            </div>
+            {% else %}
+            <div class="alert alert-warning mt-3">
+                <i class="fas fa-exclamation-triangle"></i> No wallet connected. Connect your wallet to receive payments.
+            </div>
+            {% endif %}
+            
+            <form id="tonWalletForm" class="mt-4">
+                <div class="mb-3">
+                    <label class="form-label">TON Wallet Address</label>
+                    <input type="text" class="form-control" name="wallet_address" 
+                           placeholder="UQxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                           value="{{ bot.ton_wallet_address if bot.ton_wallet_address else '' }}">
+                    <small class="form-text text-muted">Enter your TON wallet address (starts with UQ)</small>
+                </div>
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save"></i> Save Wallet Address
+                </button>
+            </form>
+            
+            <div class="mt-4">
+                <h5>How to get a TON wallet:</h5>
+                <ol class="text-muted">
+                    <li>Download Tonkeeper or another TON wallet app</li>
+                    <li>Create a new wallet or import existing one</li>
+                    <li>Copy your wallet address (starts with UQ)</li>
+                    <li>Paste it above and save</li>
+                </ol>
+                <p class="text-muted"><strong>Note:</strong> All TON payments from shop purchases will be sent to this address.</p>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -379,6 +425,7 @@ document.getElementById('aiSettingsForm').addEventListener('submit', async (e) =
 document.getElementById('miningSettingsForm').addEventListener('submit', handleFormSubmit(`/bot/${botId}/save-mining-settings`, 'Mining settings saved'));
 document.getElementById('addShopItemForm').addEventListener('submit', handleFormSubmit(`/bot/${botId}/add-shop-item`, 'Shop item added'));
 document.getElementById('addTaskForm').addEventListener('submit', handleFormSubmit(`/bot/${botId}/add-task`, 'Task added'));
+document.getElementById('tonWalletForm').addEventListener('submit', handleFormSubmit(`/bot/${botId}/update-ton-wallet`, 'TON wallet updated'));
 
 function handleFormSubmit(url, successMsg) {
     return async (e) => {

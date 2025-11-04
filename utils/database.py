@@ -14,7 +14,7 @@ def get_db_connection():
 def init_db():
     conn = get_db_connection()
     cursor = conn.cursor()
-    
+
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -24,7 +24,7 @@ def init_db():
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ''')
-    
+
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS bots (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,11 +37,12 @@ def init_db():
             is_active BOOLEAN DEFAULT 1,
             ai_enabled BOOLEAN DEFAULT 0,
             gemini_api_key TEXT,
+            ton_wallet TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         )
     ''')
-    
+
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS commands (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -54,7 +55,7 @@ def init_db():
             FOREIGN KEY (bot_id) REFERENCES bots(id) ON DELETE CASCADE
         )
     ''')
-    
+
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS mining_settings (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -73,7 +74,7 @@ def init_db():
             FOREIGN KEY (bot_id) REFERENCES bots(id) ON DELETE CASCADE
         )
     ''')
-    
+
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS shop_items (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -88,7 +89,7 @@ def init_db():
             FOREIGN KEY (bot_id) REFERENCES bots(id) ON DELETE CASCADE
         )
     ''')
-    
+
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS tasks (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -103,7 +104,7 @@ def init_db():
             FOREIGN KEY (bot_id) REFERENCES bots(id) ON DELETE CASCADE
         )
     ''')
-    
+
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS user_progress (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -120,7 +121,7 @@ def init_db():
             FOREIGN KEY (bot_id) REFERENCES bots(id) ON DELETE CASCADE
         )
     ''')
-    
+
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS analytics (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -132,12 +133,12 @@ def init_db():
             FOREIGN KEY (bot_id) REFERENCES bots(id) ON DELETE CASCADE
         )
     ''')
-    
+
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_bots_user_id ON bots(user_id)')
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_commands_bot_id ON commands(bot_id)')
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_analytics_bot_id ON analytics(bot_id)')
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_user_progress_bot_telegram ON user_progress(bot_id, telegram_user_id)')
-    
+
     conn.commit()
     conn.close()
 
@@ -215,6 +216,12 @@ def update_bot_gemini_key(bot_id, encrypted_key):
     conn.commit()
     conn.close()
 
+def update_bot_ton_wallet(bot_id, ton_wallet_address):
+    conn = get_db_connection()
+    conn.execute('UPDATE bots SET ton_wallet = ? WHERE id = ?', (ton_wallet_address, bot_id))
+    conn.commit()
+    conn.close()
+
 def get_bot_commands(bot_id):
     conn = get_db_connection()
     commands = conn.execute('SELECT * FROM commands WHERE bot_id = ? ORDER BY command',
@@ -256,9 +263,9 @@ def get_mining_settings(bot_id):
 def save_mining_settings(bot_id, settings):
     conn = get_db_connection()
     cursor = conn.cursor()
-    
+
     existing = cursor.execute('SELECT id FROM mining_settings WHERE bot_id = ?', (bot_id,)).fetchone()
-    
+
     if existing:
         cursor.execute('''UPDATE mining_settings SET
                          coin_name = ?, coin_symbol = ?, initial_balance = ?, tap_reward = ?,
@@ -279,7 +286,7 @@ def save_mining_settings(bot_id, settings):
                        settings['tap_reward'], settings['max_energy'], settings['energy_recharge_rate'],
                        settings['primary_color'], settings['secondary_color'], settings['text_color'],
                        settings['background_color'], settings.get('background_image_url')))
-    
+
     conn.commit()
     conn.close()
 
@@ -332,22 +339,22 @@ def delete_task(task_id):
 def get_or_create_user_progress(bot_id, telegram_user_id):
     conn = get_db_connection()
     cursor = conn.cursor()
-    
+
     progress = cursor.execute('SELECT * FROM user_progress WHERE bot_id = ? AND telegram_user_id = ?',
                              (bot_id, telegram_user_id)).fetchone()
-    
+
     if not progress:
         settings = get_mining_settings(bot_id)
         initial_balance = settings['initial_balance'] if settings else 0
         max_energy = settings['max_energy'] if settings else 1000
-        
+
         cursor.execute('''INSERT INTO user_progress (bot_id, telegram_user_id, coin_balance, energy)
                          VALUES (?, ?, ?, ?)''',
                       (bot_id, telegram_user_id, initial_balance, max_energy))
         conn.commit()
         progress = cursor.execute('SELECT * FROM user_progress WHERE bot_id = ? AND telegram_user_id = ?',
                                  (bot_id, telegram_user_id)).fetchone()
-    
+
     conn.close()
     return progress
 
@@ -369,21 +376,21 @@ def log_analytics_event(bot_id, telegram_user_id, event_type, event_data=None):
 
 def get_bot_analytics(bot_id):
     conn = get_db_connection()
-    
+
     total_messages = conn.execute(
         'SELECT COUNT(*) as count FROM analytics WHERE bot_id = ? AND event_type = "message"',
         (bot_id,)).fetchone()['count']
-    
+
     unique_users = conn.execute(
         'SELECT COUNT(DISTINCT telegram_user_id) as count FROM analytics WHERE bot_id = ?',
         (bot_id,)).fetchone()['count']
-    
+
     command_stats = conn.execute(
         'SELECT event_data, COUNT(*) as count FROM analytics WHERE bot_id = ? AND event_type = "command" GROUP BY event_data',
         (bot_id,)).fetchall()
-    
+
     conn.close()
-    
+
     return {
         'total_messages': total_messages,
         'unique_users': unique_users,
