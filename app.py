@@ -129,12 +129,6 @@ def create_bot_route():
         
         bot_id = create_bot(session['user_id'], bot_name, encrypted_token, bot_username, description)
         
-        add_command(bot_id, 'start', 'text', f'Welcome to {bot_name}! 🎉\n\nI\'m here to help you. Use /help to see all available commands.')
-        add_command(bot_id, 'help', 'text', '📚 Available Commands:\n\n/start - Start the bot\n/help - Show this help message\n/about - Learn about this bot\n/menu - Show main menu\n/contact - Contact support\n/webapp - Open mini-app')
-        add_command(bot_id, 'about', 'text', f'ℹ️ About {bot_name}\n\n{description if description else "This is an advanced Telegram bot created with Advanced Bots Creator."}\n\nBot Username: @{bot_username}')
-        add_command(bot_id, 'menu', 'text', '📋 Main Menu\n\nChoose an option:\n• /help - View all commands\n• /about - Learn more about this bot\n• /webapp - Open the mini-app\n• /contact - Get in touch')
-        add_command(bot_id, 'contact', 'text', '📧 Contact Us\n\nNeed help or have questions?\n\nFeel free to reach out to our support team!')
-        
         return jsonify({'success': True, 'redirect': url_for('bot_detail', bot_id=bot_id)})
     
     return render_template('create_bot.html')
