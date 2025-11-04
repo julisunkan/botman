@@ -9,3 +9,5 @@ Flask
 google-generativeai
 requests
 Werkzeug
+Pillow
+Pillow
