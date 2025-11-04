@@ -1,26 +1,40 @@
 function showNotification(message, type = 'info') {
-    const container = document.getElementById('notification-container');
-    if (!container) {
-        console.error('Notification container not found');
+    // Remove any existing inline messages
+    const existingMessages = document.querySelectorAll('.inline-message');
+    existingMessages.forEach(msg => msg.remove());
+    
+    // Find the main content container
+    const mainContainer = document.querySelector('main.container') || document.querySelector('.container');
+    if (!mainContainer) {
+        console.error('Main container not found');
         return;
     }
     
     const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
+    notification.className = `alert alert-${type === 'success' ? 'success' : type === 'error' ? 'danger' : 'info'} inline-message`;
+    notification.setAttribute('role', 'alert');
     
-    const icon = type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle';
+    const icon = type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle';
     
     notification.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 0.75rem;">
-            <i class="fas fa-${icon}" style="font-size: 1.25rem;"></i>
-            <span>${message}</span>
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+                <i class="fas fa-${icon}"></i>
+                <span>${message}</span>
+            </div>
+            <button type="button" class="btn-close btn-close-white" onclick="this.parentElement.parentElement.remove()"></button>
         </div>
     `;
     
-    container.appendChild(notification);
+    notification.style.animation = 'fadeInDown 0.3s ease-out';
+    mainContainer.insertBefore(notification, mainContainer.firstChild);
     
+    // Scroll to top to show the message
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Auto-remove after 5 seconds
     setTimeout(() => {
-        notification.style.animation = 'slideOut 0.3s ease-out';
+        notification.style.animation = 'fadeOutUp 0.3s ease-out';
         setTimeout(() => {
             if (notification.parentElement) {
                 notification.remove();
