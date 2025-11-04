@@ -363,9 +363,9 @@
             <h4><i class="fas fa-wallet"></i> TON Wallet Configuration</h4>
             <p class="text-muted mt-3">Connect your TON wallet to receive payments from shop item sales.</p>
             
-            {% if bot.ton_wallet_address %}
+            {% if bot.ton_wallet %}
             <div class="alert alert-success mt-3">
-                <i class="fas fa-check-circle"></i> Wallet Connected: <strong>{{ bot.ton_wallet_address }}</strong>
+                <i class="fas fa-check-circle"></i> Wallet Connected: <strong>{{ bot.ton_wallet }}</strong>
             </div>
             {% else %}
             <div class="alert alert-warning mt-3">
@@ -378,7 +378,7 @@
                     <label class="form-label">TON Wallet Address</label>
                     <input type="text" class="form-control" name="wallet_address" 
                            placeholder="UQxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                           value="{{ bot.ton_wallet_address if bot.ton_wallet_address else '' }}">
+                           value="{{ bot.ton_wallet if bot.ton_wallet else '' }}">
                     <small class="form-text text-muted">Enter your TON wallet address (starts with UQ)</small>
                 </div>
                 <button type="submit" class="btn btn-success">

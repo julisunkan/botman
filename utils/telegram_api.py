@@ -1,73 +1,74 @@
+
 import requests
 import json
 
 class TelegramBotAPI:
     def __init__(self, bot_token):
         self.bot_token = bot_token
-        self.base_url = f'https://api.telegram.org/bot{bot_token}'
-    
-    def get_me(self):
-        response = requests.get(f'{self.base_url}/getMe')
-        return response.json()
+        self.base_url = f"https://api.telegram.org/bot{bot_token}"
     
     def set_webhook(self, webhook_url):
-        response = requests.post(f'{self.base_url}/setWebhook', json={'url': webhook_url})
-        return response.json()
-    
-    def delete_webhook(self):
-        response = requests.post(f'{self.base_url}/deleteWebhook')
-        return response.json()
+        """Set webhook for the bot"""
+        url = f"{self.base_url}/setWebhook"
+        params = {'url': webhook_url}
+        try:
+            response = requests.post(url, json=params, timeout=10)
+            return response.json()
+        except Exception as e:
+            return {'ok': False, 'description': str(e)}
     
     def send_message(self, chat_id, text, reply_markup=None):
-        data = {
+        """Send a text message"""
+        url = f"{self.base_url}/sendMessage"
+        params = {
             'chat_id': chat_id,
             'text': text,
             'parse_mode': 'HTML'
         }
         if reply_markup:
-            data['reply_markup'] = reply_markup
-        
-        response = requests.post(f'{self.base_url}/sendMessage', json=data)
-        return response.json()
+            params['reply_markup'] = reply_markup
+        try:
+            response = requests.post(url, json=params, timeout=10)
+            return response.json()
+        except Exception as e:
+            return {'ok': False, 'description': str(e)}
     
     def send_photo(self, chat_id, photo_url, caption=None):
-        data = {
+        """Send a photo message"""
+        url = f"{self.base_url}/sendPhoto"
+        params = {
             'chat_id': chat_id,
             'photo': photo_url
         }
         if caption:
-            data['caption'] = caption
-        
-        response = requests.post(f'{self.base_url}/sendPhoto', json=data)
-        return response.json()
-    
-    def answer_callback_query(self, callback_query_id, text=None):
-        data = {'callback_query_id': callback_query_id}
-        if text:
-            data['text'] = text
-        
-        response = requests.post(f'{self.base_url}/answerCallbackQuery', json=data)
-        return response.json()
+            params['caption'] = caption
+        try:
+            response = requests.post(url, json=params, timeout=10)
+            return response.json()
+        except Exception as e:
+            return {'ok': False, 'description': str(e)}
     
     def create_inline_keyboard(self, buttons):
-        return {
-            'inline_keyboard': buttons
-        }
+        """Create inline keyboard markup"""
+        return json.dumps({'inline_keyboard': buttons})
     
     def create_web_app_keyboard(self, button_text, web_app_url):
-        return {
+        """Create web app keyboard"""
+        return json.dumps({
             'inline_keyboard': [[{
                 'text': button_text,
                 'web_app': {'url': web_app_url}
             }]]
-        }
+        })
 
 def validate_bot_token(bot_token):
+    """Validate bot token by calling getMe endpoint"""
+    url = f"https://api.telegram.org/bot{bot_token}/getMe"
     try:
-        api = TelegramBotAPI(bot_token)
-        result = api.get_me()
-        if result.get('ok'):
-            return result['result']
+        response = requests.get(url, timeout=10)
+        data = response.json()
+        if data.get('ok'):
+            return data.get('result')
         return None
-    except:
+    except Exception:
         return None

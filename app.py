@@ -590,6 +590,29 @@ def api_user_bots():
     bots = get_user_bots(user_id)
     return jsonify({'success': True, 'bots': [{'id': bot['id'], 'bot_name': bot['bot_name']} for bot in bots]})
 
+@app.route('/api/ai-chat', methods=['POST'])
+def api_ai_chat():
+    data = request.get_json()
+    bot_id = data.get('bot_id')
+    message = data.get('message')
+    telegram_user_id = data.get('user_id')
+    
+    if not bot_id or not message:
+        return jsonify({'success': False, 'message': 'Missing parameters'}), 400
+    
+    bot = get_bot_by_id(bot_id)
+    if not bot or not bot['ai_enabled']:
+        return jsonify({'success': False, 'message': 'AI not enabled'}), 400
+    
+    gemini_key = decrypt_token(bot['gemini_api_key']) if bot['gemini_api_key'] else None
+    ai_response = get_ai_response(message, gemini_key)
+    
+    if ai_response:
+        log_analytics_event(bot_id, telegram_user_id, 'ai_chat', {'message': message})
+        return jsonify({'success': True, 'response': ai_response})
+    else:
+        return jsonify({'success': False, 'message': 'AI service unavailable'}), 500
+
 @app.route('/import-template', methods=['POST'])
 @login_required
 def import_template():

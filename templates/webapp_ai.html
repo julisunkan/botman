@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ bot.bot_name }} - AI Chat</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>AI Chat - {{ bot.bot_name }}</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -57,28 +56,22 @@
             backdrop-filter: blur(10px);
         }
         .message.loading {
+            align-self: flex-start;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
             display: flex;
             gap: 5px;
-            padding: 12px 20px;
         }
-        .loading-dot {
+        .message.loading span {
             width: 8px;
             height: 8px;
-            background: white;
             border-radius: 50%;
+            background: #ffffff;
             animation: bounce 1.4s infinite ease-in-out both;
         }
-        .loading-dot:nth-child(1) { animation-delay: -0.32s; }
-        .loading-dot:nth-child(2) { animation-delay: -0.16s; }
-        @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .input-area {
+        .message.loading span:nth-child(1) { animation-delay: -0.32s; }
+        .message.loading span:nth-child(2) { animation-delay: -0.16s; }
+        .input-container {
             background: rgba(255,255,255,0.1);
             backdrop-filter: blur(10px);
             padding: 15px;
@@ -86,77 +79,59 @@
             display: flex;
             gap: 10px;
         }
-        .input-area input {
+        .input-container input {
             flex: 1;
             padding: 12px 16px;
             border: none;
             border-radius: 25px;
             background: rgba(255,255,255,0.2);
-            color: white;
+            color: #ffffff;
             font-size: 16px;
         }
-        .input-area input::placeholder {
+        .input-container input::placeholder {
             color: rgba(255,255,255,0.6);
         }
-        .input-area button {
+        .input-container button {
             padding: 12px 24px;
             border: none;
             border-radius: 25px;
             background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            font-weight: bold;
+            color: #ffffff;
+            font-size: 16px;
             cursor: pointer;
             transition: transform 0.2s;
         }
-        .input-area button:active {
+        .input-container button:active {
             transform: scale(0.95);
         }
-        .quick-prompts {
-            padding: 10px 20px;
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            background: rgba(255,255,255,0.05);
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .quick-prompt {
-            padding: 8px 16px;
-            background: rgba(255,255,255,0.15);
-            border: none;
-            border-radius: 20px;
-            color: white;
-            white-space: nowrap;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background 0.2s;
-        }
-        .quick-prompt:hover {
-            background: rgba(255,255,255,0.25);
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>🤖 {{ bot.bot_name }}</h1>
-        <p>AI-Powered Assistant</p>
+        <h1>🤖 AI Chat</h1>
+        <p>Powered by {{ bot.bot_name }}</p>
     </div>
     
-    <div class="quick-prompts">
-        <button class="quick-prompt" onclick="sendQuickMessage('Tell me a joke')">😄 Tell a joke</button>
-        <button class="quick-prompt" onclick="sendQuickMessage('Explain quantum physics')">🔬 Explain science</button>
-        <button class="quick-prompt" onclick="sendQuickMessage('Write a short story')">📝 Write story</button>
-        <button class="quick-prompt" onclick="sendQuickMessage('Give me advice')">💡 Get advice</button>
+    <div class="chat-container" id="chatContainer">
+        <div class="message ai">
+            👋 Hi! I'm an AI assistant. How can I help you today?
+        </div>
     </div>
     
-    <div class="chat-container" id="chatContainer"></div>
-    
-    <div class="input-area">
-        <input type="text" id="messageInput" placeholder="Ask me anything..." />
+    <div class="input-container">
+        <input type="text" id="messageInput" placeholder="Type your message...">
         <button onclick="sendMessage()">Send</button>
     </div>
-    
+
     <script>
-        const botId = {{ bot.id }};
-        const telegramUserId = {{ telegram_user_id }};
         const chatContainer = document.getElementById('chatContainer');
         const messageInput = document.getElementById('messageInput');
         
@@ -164,25 +139,25 @@
             if (e.key === 'Enter') sendMessage();
         });
         
-        function addMessage(text, type) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${type}`;
-            messageDiv.textContent = text;
-            chatContainer.appendChild(messageDiv);
+        function addMessage(text, isUser) {
+            const message = document.createElement('div');
+            message.className = `message ${isUser ? 'user' : 'ai'}`;
+            message.textContent = text;
+            chatContainer.appendChild(message);
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
         
         function showLoading() {
-            const loadingDiv = document.createElement('div');
-            loadingDiv.className = 'message ai loading';
-            loadingDiv.id = 'loading';
-            loadingDiv.innerHTML = '<div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div>';
-            chatContainer.appendChild(loadingDiv);
+            const loading = document.createElement('div');
+            loading.className = 'message loading';
+            loading.id = 'loadingMessage';
+            loading.innerHTML = '<span></span><span></span><span></span>';
+            chatContainer.appendChild(loading);
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
         
         function hideLoading() {
-            const loading = document.getElementById('loading');
+            const loading = document.getElementById('loadingMessage');
             if (loading) loading.remove();
         }
         
@@ -190,27 +165,35 @@
             const text = messageInput.value.trim();
             if (!text) return;
             
-            addMessage(text, 'user');
+            addMessage(text, true);
             messageInput.value = '';
             
             showLoading();
             
-            // Simulate AI response (replace with actual API call)
-            setTimeout(() => {
+            try {
+                const response = await fetch('/api/ai-chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        bot_id: {{ bot.id }},
+                        message: text,
+                        user_id: {{ telegram_user_id }}
+                    })
+                });
+                
+                const data = await response.json();
                 hideLoading();
-                addMessage('This is a demo AI response. Enable AI in bot settings and add your Gemini API key to get real AI responses!', 'ai');
-            }, 1500);
+                
+                if (data.success) {
+                    addMessage(data.response, false);
+                } else {
+                    addMessage('Sorry, I encountered an error. Please try again.', false);
+                }
+            } catch (error) {
+                hideLoading();
+                addMessage('Sorry, I couldn\'t connect. Please try again.', false);
+            }
         }
-        
-        function sendQuickMessage(text) {
-            messageInput.value = text;
-            sendMessage();
-        }
-        
-        // Welcome message
-        setTimeout(() => {
-            addMessage('Hello! I\'m your AI assistant. How can I help you today?', 'ai');
-        }, 500);
     </script>
 </body>
 </html>
