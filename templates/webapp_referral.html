@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ bot.bot_name }} - Referral Program</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 600px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .referral-link-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        .link-input {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            color: white;
+            width: 100%;
+            margin: 10px 0;
+        }
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .leaderboard {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+        }
+        .leaderboard-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .rank {
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👥 Referral Program</h1>
+            <p>Invite friends and earn rewards!</p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div style="opacity: 0.8; font-size: 14px;">Total Referrals</div>
+                <div class="stat-value">0</div>
+            </div>
+            <div class="stat-card">
+                <div style="opacity: 0.8; font-size: 14px;">Rewards Earned</div>
+                <div class="stat-value">0 💎</div>
+            </div>
+        </div>
+        
+        <div class="referral-link-card">
+            <h3 style="margin-bottom: 15px;">Your Referral Link</h3>
+            <input type="text" class="link-input" id="referralLink" value="https://t.me/yourbot?start=ref_12345" readonly>
+            <button class="btn" onclick="copyLink()">📋 Copy Link</button>
+            <button class="btn" style="background: linear-gradient(135deg, #667eea, #764ba2);" onclick="shareLink()">📤 Share Link</button>
+        </div>
+        
+        <div class="leaderboard">
+            <h3 style="margin-bottom: 20px;">🏆 Top Referrers</h3>
+            <div class="leaderboard-item">
+                <div style="display: flex; align-items: center;">
+                    <div class="rank">🥇</div>
+                    <div>
+                        <div style="font-weight: bold;">User1</div>
+                        <div style="font-size: 14px; opacity: 0.8;">125 referrals</div>
+                    </div>
+                </div>
+                <div style="font-weight: bold; color: #10b981;">+1,250 💎</div>
+            </div>
+            <div class="leaderboard-item">
+                <div style="display: flex; align-items: center;">
+                    <div class="rank">🥈</div>
+                    <div>
+                        <div style="font-weight: bold;">User2</div>
+                        <div style="font-size: 14px; opacity: 0.8;">98 referrals</div>
+                    </div>
+                </div>
+                <div style="font-weight: bold; color: #10b981;">+980 💎</div>
+            </div>
+            <div class="leaderboard-item">
+                <div style="display: flex; align-items: center;">
+                    <div class="rank">🥉</div>
+                    <div>
+                        <div style="font-weight: bold;">User3</div>
+                        <div style="font-size: 14px; opacity: 0.8;">76 referrals</div>
+                    </div>
+                </div>
+                <div style="font-weight: bold; color: #10b981;">+760 💎</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const botId = {{ bot.id }};
+        const telegramUserId = {{ telegram_user_id }};
+        
+        function copyLink() {
+            const link = document.getElementById('referralLink');
+            link.select();
+            document.execCommand('copy');
+            alert('Link copied to clipboard!');
+        }
+        
+        function shareLink() {
+            const link = document.getElementById('referralLink').value;
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=Join me on this awesome bot!`);
+            }
+        }
+    </script>
+</body>
+</html>

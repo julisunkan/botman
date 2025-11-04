@@ -1,38 +1,27 @@
-
 {
   "name": "News & Updates Feed",
   "description": "Deliver news, updates, and content to subscribers",
   "category": "Content",
+  "webapp_type": "news",
   "commands": [
     {
       "command": "start",
-      "response_type": "text",
-      "response_content": "📰 Welcome to News Feed Bot!\n\nStay informed with:\n📡 Latest updates\n🔔 Breaking news alerts\n📑 Curated content\n🎯 Personalized topics\n\nUse /subscribe to get started!\nUse /latest to see recent news."
+      "response_type": "url_button",
+      "response_content": "📰 Welcome to News & Updates!\n\n✅ Latest breaking news\n✅ Multiple categories\n✅ Daily updates\n✅ Personalized feed\n\nStay informed!",
+      "url_link": "/bot/BOT_ID/webapp/news",
+      "button_text": "📱 Open News Feed"
     },
     {
-      "command": "latest",
-      "response_type": "text",
-      "response_content": "📰 Latest News\n\n🔴 Breaking: Latest developments...\n📈 Trending: Top stories today\n🌍 World: International updates\n💼 Business: Market highlights\n⚽ Sports: Recent scores\n\nUse /categories to filter by topic!"
+      "command": "news",
+      "response_type": "url_button",
+      "response_content": "📰 Browse the latest news across all categories!",
+      "url_link": "/bot/BOT_ID/webapp/news",
+      "button_text": "📱 View News"
     },
     {
       "command": "subscribe",
       "response_type": "text",
-      "response_content": "🔔 Subscribe to Updates\n\nChoose your interests:\n📱 Technology\n💰 Finance\n⚽ Sports\n🎬 Entertainment\n🌍 World News\n🔬 Science\n\nReply with your preferences to get started!"
-    },
-    {
-      "command": "categories",
-      "response_type": "text",
-      "response_content": "📑 News Categories\n\n1️⃣ Technology - Latest tech news\n2️⃣ Business - Market updates\n3️⃣ Sports - Scores & highlights\n4️⃣ Entertainment - Movies, music, TV\n5️⃣ Science - Discoveries & research\n6️⃣ World - International news\n\nUse /latest to see all news!"
-    },
-    {
-      "command": "settings",
-      "response_type": "text",
-      "response_content": "⚙️ Notification Settings\n\n🔔 Current preferences:\n• Frequency: Daily digest\n• Topics: All categories\n• Time: 9:00 AM\n\nTo change settings:\n/subscribe - Update topics\n/frequency - Change frequency\n/mute - Pause notifications"
-    },
-    {
-      "command": "help",
-      "response_type": "text",
-      "response_content": "🆘 News Bot Help\n\n/latest - Recent news\n/categories - Browse topics\n/subscribe - Set preferences\n/settings - Manage notifications\n/search - Find specific news\n/about - About this bot\n\nStay informed! 📰"
+      "response_content": "✅ You're now subscribed to daily news updates!\n\nYou'll receive the latest news every day at 9:00 AM."
     }
   ]
 }

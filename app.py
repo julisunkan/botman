@@ -437,6 +437,26 @@ def webapp(bot_id, webapp_type='mining'):
                              bot=dict(bot),
                              shop_items=shop_items,
                              telegram_user_id=telegram_user_id)
+    elif webapp_type == 'quiz':
+        return render_template('webapp_quiz.html',
+                             bot=dict(bot),
+                             telegram_user_id=telegram_user_id)
+    elif webapp_type == 'news':
+        return render_template('webapp_news.html',
+                             bot=dict(bot),
+                             telegram_user_id=telegram_user_id)
+    elif webapp_type == 'referral':
+        return render_template('webapp_referral.html',
+                             bot=dict(bot),
+                             telegram_user_id=telegram_user_id)
+    elif webapp_type == 'fitness':
+        return render_template('webapp_fitness.html',
+                             bot=dict(bot),
+                             telegram_user_id=telegram_user_id)
+    elif webapp_type == 'event':
+        return render_template('webapp_event.html',
+                             bot=dict(bot),
+                             telegram_user_id=telegram_user_id)
     else:
         mining_settings = get_mining_settings(bot_id)
         shop_items = get_shop_items(bot_id)
@@ -683,10 +703,20 @@ def import_template():
     with open(template_file, 'r') as f:
         template = json.load(f)
     
+    # Get webapp_type from template, default to 'mining'
+    webapp_type = template.get('webapp_type', 'mining')
+    
     for cmd in template.get('commands', []):
         url_link = cmd.get('url_link', '')
         if url_link:
+            # Replace BOT_ID and ensure webapp type is correct
             url_link = url_link.replace('BOT_ID', str(bot_id))
+            # If URL contains /webapp/, ensure it has the correct type
+            if '/webapp/' in url_link and webapp_type != 'mining':
+                # Update the webapp type in the URL
+                parts = url_link.split('/webapp/')
+                if len(parts) > 1:
+                    url_link = f"{parts[0]}/webapp/{webapp_type}"
         add_command(bot_id, cmd['command'], cmd['response_type'], 
                    cmd['response_content'], url_link, cmd.get('button_text'))
     

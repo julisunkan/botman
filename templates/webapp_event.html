@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ bot.bot_name }} - Events</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 600px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .event-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        .event-title { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+        .event-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 15px 0;
+            opacity: 0.9;
+        }
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .attendees {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📅 Upcoming Events</h1>
+            <p>RSVP and join events</p>
+        </div>
+        
+        <div class="event-card">
+            <div class="event-title">🎉 Community Meetup</div>
+            <div class="event-meta">
+                <div>📅 Saturday, Nov 10, 2025</div>
+                <div>🕐 6:00 PM - 9:00 PM</div>
+                <div>📍 Community Hall, Downtown</div>
+            </div>
+            <div class="attendees">
+                <div style="font-weight: bold; margin-bottom: 10px;">👥 25 people going</div>
+                <div style="font-size: 14px; opacity: 0.8;">Join your community members!</div>
+            </div>
+            <button class="btn">✅ RSVP Now</button>
+        </div>
+    </div>
+</body>
+</html>

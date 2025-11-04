@@ -1,44 +1,29 @@
-
 {
   "name": "Referral Program",
   "description": "Manage referrals and reward users for inviting friends",
-  "category": "Marketing",
+  "category": "Growth",
+  "webapp_type": "referral",
   "commands": [
     {
       "command": "start",
       "response_type": "url_button",
-      "response_content": "🎁 Welcome to Referral Program!\n\n💰 Earn rewards by inviting friends!\n\n🎯 Benefits:\n• Referral bonuses\n• Tiered rewards\n• Leaderboard rankings\n• Exclusive perks\n\nStart earning now!",
-      "url_link": "/bot/BOT_ID/webapp",
-      "button_text": "🚀 Start Referring"
+      "response_content": "👥 Welcome to the Referral Program!\n\n💰 Earn rewards for each friend you invite\n🏆 Compete on leaderboards\n🎁 Special bonuses for top referrers\n\nStart inviting now!",
+      "url_link": "/bot/BOT_ID/webapp/referral",
+      "button_text": "🚀 Get Started"
     },
     {
-      "command": "referral",
-      "response_type": "text",
-      "response_content": "🔗 Your Referral Link\n\nShare this link with friends:\nhttps://t.me/YOUR_BOT?start=REF123456\n\n💰 Earn rewards for each signup!\n\n🎁 Current bonuses:\n✅ 100 points per referral\n✅ Bonus at 10 referrals\n✅ VIP status at 50 referrals"
+      "command": "refer",
+      "response_type": "url_button",
+      "response_content": "👥 Invite your friends and earn rewards!\n\nYou'll get 10 coins for each friend who joins.",
+      "url_link": "/bot/BOT_ID/webapp/referral",
+      "button_text": "📤 Get Referral Link"
     },
     {
       "command": "stats",
       "response_type": "url_button",
-      "response_content": "📊 Your Referral Stats\n\n👥 Total referrals\n💰 Earnings\n🏆 Rank\n📈 This month's performance\n\nView detailed analytics!",
-      "url_link": "/bot/BOT_ID/webapp",
+      "response_content": "📊 View your referral statistics and rewards!",
+      "url_link": "/bot/BOT_ID/webapp/referral",
       "button_text": "📈 View Stats"
-    },
-    {
-      "command": "rewards",
-      "response_type": "text",
-      "response_content": "🎁 Reward Tiers\n\n🥉 Bronze (5 referrals)\n• 500 bonus points\n• Special badge\n\n🥈 Silver (25 referrals)\n• 2,500 bonus points\n• Premium features\n\n🥇 Gold (100 referrals)\n• 10,000 bonus points\n• VIP status\n• Exclusive perks"
-    },
-    {
-      "command": "leaderboard",
-      "response_type": "url_button",
-      "response_content": "🏆 Top Referrers\n\nSee who's leading:\n🥇 Most referrals\n💰 Highest earnings\n🔥 This month's leaders\n\nCan you reach the top?",
-      "url_link": "/bot/BOT_ID/webapp",
-      "button_text": "👑 View Leaderboard"
-    },
-    {
-      "command": "help",
-      "response_type": "text",
-      "response_content": "🆘 Referral Program Help\n\n/referral - Get your link\n/stats - View your stats\n/rewards - See reward tiers\n/leaderboard - Top referrers\n/payout - Request withdrawal\n\nInvite friends, earn rewards! 💰"
     }
   ]
 }

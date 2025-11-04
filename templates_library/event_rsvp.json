@@ -1,46 +1,15 @@
-
 {
   "name": "Event RSVP Manager",
   "description": "Create and manage events with RSVP tracking",
-  "category": "Productivity",
+  "category": "Events",
+  "webapp_type": "event",
   "commands": [
     {
       "command": "start",
       "response_type": "url_button",
-      "response_content": "🎉 Welcome to Event Manager!\n\n📅 Features:\n• Create events\n• Send invitations\n• Track RSVPs\n• Send reminders\n• Attendance reports\n\nPlan your perfect event!",
-      "url_link": "/bot/BOT_ID/webapp",
-      "button_text": "📋 View Events"
-    },
-    {
-      "command": "create",
-      "response_type": "text",
-      "response_content": "➕ Create New Event\n\nTo create an event, provide:\n\n📌 Event name\n📅 Date & time\n📍 Location\n👥 Max attendees\n📝 Description\n\nReply with event details to get started!"
-    },
-    {
-      "command": "events",
-      "response_type": "url_button",
-      "response_content": "📅 Upcoming Events\n\n🎉 Active events\n✅ Past events\n📊 Attendance stats\n\nView all your events and RSVPs!",
-      "url_link": "/bot/BOT_ID/webapp",
-      "button_text": "📋 View All Events"
-    },
-    {
-      "command": "rsvp",
-      "response_type": "url_button",
-      "response_content": "✅ RSVP to Events\n\nBrowse upcoming events and confirm your attendance.\n\nYour RSVPs will be tracked automatically!",
-      "url_link": "/bot/BOT_ID/webapp",
-      "button_text": "✅ RSVP Now"
-    },
-    {
-      "command": "myevents",
-      "response_type": "url_button",
-      "response_content": "📋 Your Events\n\n👤 Events you're attending\n📊 Your RSVP history\n🔔 Upcoming reminders\n\nManage your schedule!",
-      "url_link": "/bot/BOT_ID/webapp",
-      "button_text": "👤 My Schedule"
-    },
-    {
-      "command": "help",
-      "response_type": "text",
-      "response_content": "🆘 Event Manager Help\n\n/create - New event\n/events - All events\n/rsvp - Confirm attendance\n/myevents - Your schedule\n/cancel - Cancel RSVP\n/settings - Notification settings\n\nPlan smarter, not harder! 🎯"
+      "response_content": "📅 Welcome to Event Manager!\n\n✅ Browse upcoming events\n👥 RSVP to events\n🔔 Get reminders\n📊 View attendees\n\nNever miss an event!",
+      "url_link": "/bot/BOT_ID/webapp/event",
+      "button_text": "📅 View Events"
     }
   ]
 }
