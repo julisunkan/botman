@@ -375,33 +375,22 @@ body {
 }
 
 .footer-cta-container {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
     display: flex;
     gap: 20px;
-    z-index: 1000;
-    animation: slideUp 0.8s ease-out, floatContainer 3s ease-in-out infinite;
+    justify-content: center;
+    margin-top: 3rem;
+    padding-bottom: 3rem;
+    animation: slideUp 0.8s ease-out;
 }
 
 @keyframes slideUp {
     from {
-        transform: translateX(-50%) translateY(100px);
+        transform: translateY(100px);
         opacity: 0;
     }
     to {
-        transform: translateX(-50%) translateY(0);
+        transform: translateY(0);
         opacity: 1;
-    }
-}
-
-@keyframes floatContainer {
-    0%, 100% {
-        transform: translateX(-50%) translateY(0);
-    }
-    50% {
-        transform: translateX(-50%) translateY(-10px);
     }
 }
 
@@ -420,19 +409,6 @@ body {
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    animation: buttonFloat 2.5s ease-in-out infinite;
-}
-
-@keyframes buttonFloat {
-    0%, 100% {
-        transform: translateY(0) rotate(0deg);
-    }
-    25% {
-        transform: translateY(-3px) rotate(1deg);
-    }
-    75% {
-        transform: translateY(3px) rotate(-1deg);
-    }
 }
 
 .footer-cta-btn:hover {
@@ -444,7 +420,7 @@ body {
 .generate-btn {
     background: linear-gradient(135deg, #9333ea, #ec4899);
     color: white;
-    animation: buttonFloat 2.5s ease-in-out infinite, pulse-glow 2s ease-in-out infinite;
+    animation: pulse-glow 2s ease-in-out infinite;
 }
 
 .login-btn {
@@ -452,7 +428,6 @@ body {
     backdrop-filter: blur(20px);
     color: white;
     border: 2px solid rgba(255, 255, 255, 0.3);
-    animation: buttonFloat 2.5s ease-in-out infinite 0.5s;
 }
 
 .login-btn:hover {
