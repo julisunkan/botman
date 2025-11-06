@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 
 {% block content %}
@@ -12,7 +11,7 @@
             <div class="shape shape-5"></div>
         </div>
     </div>
-    
+
     <div class="hero-content-wrapper">
         <div class="hero-main">
             <div class="robot-animation">
@@ -33,21 +32,21 @@
                     <rect x="130" y="110" width="15" height="40" rx="7" fill="url(#robotGradient)" class="robot-arm"/>
                 </svg>
             </div>
-            
+
             <h1 class="glitch-text" data-text="Advanced Bots Creator">
                 Advanced Bots Creator
             </h1>
-            
+
             <div class="typing-container">
                 <p class="typing-text">Create • Deploy • Dominate</p>
             </div>
-            
+
             <p class="hero-subtitle">
                 Next-generation Telegram bot platform with AI, blockchain, and gamification
             </p>
-            
+
             <div class="cta-buttons">
-                <button onclick="generateLogin()" class="cta-primary">
+                <button onclick="window.location.href='/generate-login-details'" class="cta-primary">
                     <span class="button-content">
                         <svg class="button-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M12 5v14M5 12h14"/>
@@ -56,7 +55,7 @@
                     </span>
                     <div class="button-glow"></div>
                 </button>
-                
+
                 <a href="{{ url_for('login') }}" class="cta-secondary">
                     <span class="button-content">
                         <svg class="button-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -67,7 +66,7 @@
                 </a>
             </div>
         </div>
-        
+
         <div class="features-showcase">
             <div class="feature-item" data-aos="fade-up" data-delay="100">
                 <div class="feature-icon-wrapper">
@@ -81,7 +80,7 @@
                 <h3>AI-Powered</h3>
                 <p>Google Gemini integration for smart conversations</p>
             </div>
-            
+
             <div class="feature-item" data-aos="fade-up" data-delay="200">
                 <div class="feature-icon-wrapper">
                     <div class="icon-glow"></div>
@@ -93,7 +92,7 @@
                 <h3>Tap-to-Earn</h3>
                 <p>Engaging gamification mechanics with rewards</p>
             </div>
-            
+
             <div class="feature-item" data-aos="fade-up" data-delay="300">
                 <div class="feature-icon-wrapper">
                     <div class="icon-glow"></div>
@@ -105,7 +104,7 @@
                 <h3>TON Blockchain</h3>
                 <p>Seamless cryptocurrency payment integration</p>
             </div>
-            
+
             <div class="feature-item" data-aos="fade-up" data-delay="400">
                 <div class="feature-icon-wrapper">
                     <div class="icon-glow"></div>
@@ -120,105 +119,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="credentialsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-0">
-                <h5 class="modal-title">
-                    <i class="fas fa-check-circle text-success"></i> Account Created!
-                </h5>
-            </div>
-            <div class="modal-body">
-                <div class="alert alert-warning mb-4">
-                    <i class="fas fa-exclamation-triangle"></i> 
-                    <strong>Important:</strong> Please copy and save these credentials. You won't be able to see them again!
-                </div>
-                
-                <div class="credential-box mb-3">
-                    <label class="form-label"><strong>Username:</strong></label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="generatedUsername" readonly>
-                        <button class="btn btn-outline-light" onclick="copyToClipboard('generatedUsername')">
-                            <i class="fas fa-copy"></i> Copy
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="credential-box mb-3">
-                    <label class="form-label"><strong>Password:</strong></label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="generatedPassword" readonly>
-                        <button class="btn btn-outline-light" onclick="copyToClipboard('generatedPassword')">
-                            <i class="fas fa-copy"></i> Copy
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i> 
-                    You will be automatically logged in when you continue.
-                </div>
-            </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-gradient w-100" onclick="continueToApp()">
-                    Continue to Dashboard <i class="fas fa-arrow-right"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script>
-let redirectUrl = '';
-
-async function generateLogin() {
-    try {
-        const response = await fetch('/generate-login', {
-            method: 'POST'
-        });
-        
-        const data = await response.json();
-        
-        if (data.success) {
-            document.getElementById('generatedUsername').value = data.username;
-            document.getElementById('generatedPassword').value = data.password;
-            redirectUrl = data.redirect;
-            
-            const modal = new bootstrap.Modal(document.getElementById('credentialsModal'));
-            modal.show();
-        } else {
-            showNotification(data.message || 'Failed to generate login', 'error');
-        }
-    } catch (error) {
-        showNotification('An error occurred', 'error');
-    }
-}
-
-function copyToClipboard(elementId) {
-    const input = document.getElementById(elementId);
-    input.select();
-    input.setSelectionRange(0, 99999);
-    
-    navigator.clipboard.writeText(input.value).then(() => {
-        const btn = event.target.closest('button');
-        const originalHTML = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
-        btn.classList.add('btn-success');
-        btn.classList.remove('btn-outline-light');
-        
-        setTimeout(() => {
-            btn.innerHTML = originalHTML;
-            btn.classList.remove('btn-success');
-            btn.classList.add('btn-outline-light');
-        }, 2000);
-    });
-}
-
-function continueToApp() {
-    window.location.href = redirectUrl;
-}
-
-// Animate features on scroll
 function initAOS() {
     const features = document.querySelectorAll('[data-aos]');
     const observer = new IntersectionObserver((entries) => {
@@ -231,7 +132,7 @@ function initAOS() {
             }
         });
     }, { threshold: 0.1 });
-    
+
     features.forEach(feature => observer.observe(feature));
 }
 
@@ -622,7 +523,7 @@ body {
     .cta-buttons {
         flex-direction: column;
     }
-    
+
     .cta-primary, .cta-secondary {
         width: 100%;
         justify-content: center;

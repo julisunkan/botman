@@ -89,14 +89,27 @@ def generate_login():
         if user_id:
             session['user_id'] = user_id
             session['username'] = username
+            session['temp_credentials'] = {
+                'username': username,
+                'password': password
+            }
             return jsonify({
                 'success': True,
-                'username': username,
-                'password': password,
-                'redirect': url_for('dashboard')
+                'redirect': url_for('show_credentials')
             })
     
     return jsonify({'success': False, 'message': 'Failed to generate unique credentials. Please try again.'}), 500
+
+@app.route('/credentials')
+@login_required
+def show_credentials():
+    credentials = session.pop('temp_credentials', None)
+    if not credentials:
+        return redirect(url_for('dashboard'))
+    
+    return render_template('credentials.html', 
+                         username=credentials['username'],
+                         password=credentials['password'])
 
 @app.route('/logout')
 def logout():
