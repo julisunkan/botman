@@ -44,27 +44,6 @@
             <p class="hero-subtitle">
                 Next-generation Telegram bot platform with AI, blockchain, and gamification
             </p>
-
-            <div class="cta-buttons">
-                <button onclick="window.location.href='/generate-login-details'" class="cta-primary">
-                    <span class="button-content">
-                        <svg class="button-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 5v14M5 12h14"/>
-                        </svg>
-                        <span>Generate Login</span>
-                    </span>
-                    <div class="button-glow"></div>
-                </button>
-
-                <a href="{{ url_for('login') }}" class="cta-secondary">
-                    <span class="button-content">
-                        <svg class="button-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13.8 12H3"/>
-                        </svg>
-                        <span>Sign In</span>
-                    </span>
-                </a>
-            </div>
         </div>
 
         <div class="features-showcase">
@@ -117,6 +96,24 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="footer-cta-container">
+    <button onclick="window.location.href='/generate-login-details'" class="footer-cta-btn generate-btn">
+        <div class="btn-ripple"></div>
+        <svg class="btn-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 5v14M5 12h14"/>
+        </svg>
+        <span class="btn-text">Generate Login</span>
+    </button>
+
+    <a href="{{ url_for('login') }}" class="footer-cta-btn login-btn">
+        <div class="btn-ripple"></div>
+        <svg class="btn-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13.8 12H3"/>
+        </svg>
+        <span class="btn-text">Sign In</span>
+    </a>
 </div>
 
 <script>
@@ -344,86 +341,122 @@ body {
     margin-right: auto;
 }
 
-.cta-buttons {
+.footer-cta-container {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
-    gap: 1.5rem;
-    justify-content: center;
-    flex-wrap: wrap;
+    gap: 20px;
+    z-index: 1000;
+    animation: slideUp 0.8s ease-out;
 }
 
-.cta-primary, .cta-secondary {
+@keyframes slideUp {
+    from {
+        transform: translateX(-50%) translateY(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}
+
+.footer-cta-btn {
     position: relative;
-    padding: 1rem 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 35px;
+    border: none;
     border-radius: 50px;
     font-size: 1.1rem;
     font-weight: 700;
-    border: none;
+    text-decoration: none;
     cursor: pointer;
     overflow: hidden;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
 }
 
-.cta-primary {
+.footer-cta-btn:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 20px 60px rgba(147, 51, 234, 0.6);
+}
+
+.generate-btn {
     background: linear-gradient(135deg, #9333ea, #ec4899);
     color: white;
-    box-shadow: 0 10px 30px rgba(147, 51, 234, 0.4);
+    animation: pulse-glow 2s ease-in-out infinite;
 }
 
-.cta-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 40px rgba(147, 51, 234, 0.6);
-}
-
-.cta-secondary {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+.login-btn {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
     color: white;
     border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
-.cta-secondary:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.5);
-    transform: translateY(-3px);
+.login-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.6);
     color: white;
 }
 
-.button-content {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 10px 40px rgba(147, 51, 234, 0.4), 0 0 30px rgba(236, 72, 153, 0.3);
+    }
+    50% {
+        box-shadow: 0 10px 40px rgba(147, 51, 234, 0.6), 0 0 50px rgba(236, 72, 153, 0.5);
+    }
+}
+
+.btn-icon {
+    transition: all 0.3s ease;
+}
+
+.footer-cta-btn:hover .btn-icon {
+    transform: scale(1.2) rotate(10deg);
+}
+
+.btn-text {
     position: relative;
     z-index: 2;
 }
 
-.button-icon {
-    transition: transform 0.3s ease;
-}
-
-.cta-primary:hover .button-icon,
-.cta-secondary:hover .button-icon {
-    transform: scale(1.2) rotate(5deg);
-}
-
-.button-glow {
+.btn-ripple {
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transform: scale(0);
+    transition: all 0.6s ease;
 }
 
-.cta-primary:hover .button-glow {
+.footer-cta-btn:active .btn-ripple {
     opacity: 1;
-    animation: pulse 1.5s infinite;
+    transform: scale(2);
+    transition: all 0s;
 }
 
-@keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 0.5; }
-    50% { transform: scale(1.2); opacity: 0.8; }
+.footer-cta-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.footer-cta-btn:hover::before {
+    width: 300px;
+    height: 300px;
 }
 
 .features-showcase {
@@ -520,13 +553,15 @@ body {
 }
 
 @media (max-width: 768px) {
-    .cta-buttons {
+    .footer-cta-container {
         flex-direction: column;
+        bottom: 20px;
+        gap: 15px;
     }
 
-    .cta-primary, .cta-secondary {
-        width: 100%;
-        justify-content: center;
+    .footer-cta-btn {
+        padding: 16px 30px;
+        font-size: 1rem;
     }
 }
 </style>
