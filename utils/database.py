@@ -450,3 +450,44 @@ def get_user_analytics(bot_id, telegram_user_id):
         'command_count': command_count,
         'tap_count': tap_count
     }
+
+
+def get_user_analytics(bot_id, telegram_user_id):
+    """Get analytics for a specific user"""
+    conn = get_db_connection()
+    
+    # Get message count
+    message_count = conn.execute('''
+        SELECT COUNT(*) as count FROM analytics 
+        WHERE bot_id = ? AND telegram_user_id = ? AND event_type = 'message'
+    ''', (bot_id, telegram_user_id)).fetchone()['count']
+    
+    # Get command count
+    command_count = conn.execute('''
+        SELECT COUNT(*) as count FROM analytics 
+        WHERE bot_id = ? AND telegram_user_id = ? AND event_type = 'command'
+    ''', (bot_id, telegram_user_id)).fetchone()['count']
+    
+    # Get tap count
+    tap_count = conn.execute('''
+        SELECT COUNT(*) as count FROM analytics 
+        WHERE bot_id = ? AND telegram_user_id = ? AND event_type = 'tap'
+    ''', (bot_id, telegram_user_id)).fetchone()['count']
+    
+    # Get recent events
+    events = conn.execute('''
+        SELECT event_type, event_data, timestamp 
+        FROM analytics 
+        WHERE bot_id = ? AND telegram_user_id = ?
+        ORDER BY timestamp DESC
+        LIMIT 50
+    ''', (bot_id, telegram_user_id)).fetchall()
+    
+    conn.close()
+    
+    return {
+        'message_count': message_count,
+        'command_count': command_count,
+        'tap_count': tap_count,
+        'events': events
+    }

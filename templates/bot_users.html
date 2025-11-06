@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 
 {% block title %}Users - {{ bot.bot_name }} - Advanced Bots Creator{% endblock %}
@@ -18,7 +17,7 @@
 
 <div class="card-glass">
     <h4><i class="fas fa-list"></i> User List ({{ users|length }} users)</h4>
-    
+
     {% if users %}
     <div class="table-responsive mt-3">
         <table class="table table-dark table-hover">
@@ -45,9 +44,9 @@
                     <td>{{ user.first_seen or 'N/A' }}</td>
                     <td>{{ user.last_seen or 'N/A' }}</td>
                     <td>
-                        <button class="btn btn-sm btn-outline-primary" onclick="viewUserDetail({{ user.telegram_user_id }})">
+                        <a href="{{ url_for('user_detail', bot_id=bot.id, telegram_user_id=user.telegram_user_id) }}" class="btn btn-sm btn-outline-primary">
                             <i class="fas fa-eye"></i> View Details
-                        </button>
+                        </a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -61,132 +60,15 @@
     {% endif %}
 </div>
 
-<!-- User Detail Modal -->
-<div class="modal fade" id="userDetailModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content bg-dark">
-            <div class="modal-header">
-                <h5 class="modal-title"><i class="fas fa-user"></i> User Details</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body" id="userDetailContent">
-                <div class="text-center">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<style>
+.bot-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+</style>
 
 <script>
-const botId = {{ bot.id }};
-
-async function viewUserDetail(telegramUserId) {
-    const modal = new bootstrap.Modal(document.getElementById('userDetailModal'));
-    modal.show();
-    
-    const content = document.getElementById('userDetailContent');
-    content.innerHTML = `
-        <div class="text-center">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-        </div>
-    `;
-    
-    try {
-        const response = await fetch(`/bot/${botId}/user/${telegramUserId}`);
-        const data = await response.json();
-        
-        if (data.success) {
-            const user = data.user;
-            let statsHtml = '';
-            
-            if (user.stats && user.stats.length > 0) {
-                statsHtml = user.stats.map(s => `
-                    <div class="col-md-4">
-                        <div class="stat-card">
-                            <h4>${s.count}</h4>
-                            <p>${s.event_type}</p>
-                        </div>
-                    </div>
-                `).join('');
-            }
-            
-            let activitiesHtml = '';
-            if (user.activities && user.activities.length > 0) {
-                activitiesHtml = user.activities.map(a => `
-                    <tr>
-                        <td><span class="badge bg-info">${a.event_type}</span></td>
-                        <td>${a.event_data || 'N/A'}</td>
-                        <td>${a.timestamp}</td>
-                    </tr>
-                `).join('');
-            } else {
-                activitiesHtml = '<tr><td colspan="3" class="text-center">No activities yet</td></tr>';
-            }
-            
-            content.innerHTML = `
-                <h6>User ID: <strong>${telegramUserId}</strong></h6>
-                
-                ${user.progress ? `
-                <div class="row g-3 mt-3">
-                    <div class="col-md-3">
-                        <div class="stat-card">
-                            <h4>${user.progress.coin_balance}</h4>
-                            <p>Coins</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="stat-card">
-                            <h4>${user.progress.energy}</h4>
-                            <p>Energy</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="stat-card">
-                            <h4>${user.progress.total_taps}</h4>
-                            <p>Total Taps</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="stat-card">
-                            <h4>${user.progress.level}</h4>
-                            <p>Level</p>
-                        </div>
-                    </div>
-                </div>
-                ` : '<p class="text-muted mt-3">No progress data available</p>'}
-                
-                <h6 class="mt-4">Interaction Statistics</h6>
-                <div class="row g-3 mt-2">
-                    ${statsHtml || '<div class="col-12"><p class="text-muted">No statistics available</p></div>'}
-                </div>
-                
-                <h6 class="mt-4">Recent Activity</h6>
-                <div class="table-responsive mt-2">
-                    <table class="table table-dark table-sm">
-                        <thead>
-                            <tr>
-                                <th>Event Type</th>
-                                <th>Data</th>
-                                <th>Time</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${activitiesHtml}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        } else {
-            content.innerHTML = '<div class="alert alert-danger">Failed to load user details</div>';
-        }
-    } catch (error) {
-        content.innerHTML = '<div class="alert alert-danger">An error occurred while loading user details</div>';
-    }
-}
+// The previous JavaScript for the modal has been removed as the 'View Details' button now navigates directly.
 </script>
 {% endblock %}
