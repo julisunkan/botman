@@ -117,23 +117,6 @@
                 <p>Track engagement and user behavior instantly</p>
             </div>
         </div>
-        
-        <div class="stats-banner">
-            <div class="stat-item">
-                <div class="stat-number" data-target="1000">0</div>
-                <div class="stat-label">Active Bots</div>
-            </div>
-            <div class="stat-divider"></div>
-            <div class="stat-item">
-                <div class="stat-number" data-target="50000">0</div>
-                <div class="stat-label">Total Users</div>
-            </div>
-            <div class="stat-divider"></div>
-            <div class="stat-item">
-                <div class="stat-number" data-target="99">0</div>
-                <div class="stat-label">Uptime %</div>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -235,27 +218,6 @@ function continueToApp() {
     window.location.href = redirectUrl;
 }
 
-// Animate stats counter
-function animateStats() {
-    const statNumbers = document.querySelectorAll('.stat-number');
-    statNumbers.forEach(stat => {
-        const target = parseInt(stat.getAttribute('data-target'));
-        const duration = 2000;
-        const step = target / (duration / 16);
-        let current = 0;
-        
-        const timer = setInterval(() => {
-            current += step;
-            if (current >= target) {
-                stat.textContent = target.toLocaleString();
-                clearInterval(timer);
-            } else {
-                stat.textContent = Math.floor(current).toLocaleString();
-            }
-        }, 16);
-    });
-}
-
 // Animate features on scroll
 function initAOS() {
     const features = document.querySelectorAll('[data-aos]');
@@ -274,7 +236,6 @@ function initAOS() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    animateStats();
     initAOS();
 });
 </script>
@@ -646,44 +607,6 @@ body {
     line-height: 1.6;
 }
 
-.stats-banner {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background: rgba(30, 41, 59, 0.6);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(147, 51, 234, 0.3);
-    border-radius: 20px;
-    padding: 2rem;
-    gap: 2rem;
-}
-
-.stat-item {
-    text-align: center;
-}
-
-.stat-number {
-    font-size: 3rem;
-    font-weight: 900;
-    background: linear-gradient(135deg, #9333ea, #ec4899);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 0.5rem;
-}
-
-.stat-label {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.stat-divider {
-    width: 2px;
-    height: 60px;
-    background: linear-gradient(180deg, transparent, rgba(147, 51, 234, 0.5), transparent);
-}
-
 .credential-box {
     background: rgba(15, 23, 42, 0.5);
     border-radius: 0.5rem;
@@ -696,17 +619,6 @@ body {
 }
 
 @media (max-width: 768px) {
-    .stats-banner {
-        flex-direction: column;
-        gap: 1.5rem;
-    }
-    
-    .stat-divider {
-        width: 60px;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, rgba(147, 51, 234, 0.5), transparent);
-    }
-    
     .cta-buttons {
         flex-direction: column;
     }
