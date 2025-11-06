@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, session, j
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import secrets
+import random
+import string
 from datetime import datetime, timedelta
 import json
 
@@ -87,6 +89,36 @@ def login():
             return jsonify({'success': False, 'message': 'Invalid username or password'}), 401
     
     return render_template('login.html', register_mode=False)
+
+@app.route('/generate-login', methods=['POST'])
+def generate_login():
+    adjectives = ['Swift', 'Bright', 'Bold', 'Clever', 'Swift', 'Noble', 'Cosmic', 'Digital', 'Cyber', 'Quantum']
+    nouns = ['Bot', 'Creator', 'Builder', 'Master', 'Wizard', 'Engineer', 'Coder', 'Dev', 'Maker', 'Guru']
+    
+    random_adjective = random.choice(adjectives)
+    random_noun = random.choice(nouns)
+    random_number = random.randint(100, 9999)
+    username = f"{random_adjective}{random_noun}{random_number}"
+    
+    password_chars = string.ascii_letters + string.digits
+    password = ''.join(random.choice(password_chars) for _ in range(12))
+    
+    email = f"{username.lower()}@botcreator.local"
+    
+    password_hash = generate_password_hash(password)
+    user_id = create_user(username, email, password_hash)
+    
+    if user_id:
+        session['user_id'] = user_id
+        session['username'] = username
+        return jsonify({
+            'success': True,
+            'username': username,
+            'password': password,
+            'redirect': url_for('dashboard')
+        })
+    else:
+        return generate_login()
 
 @app.route('/logout')
 def logout():
