@@ -193,13 +193,25 @@ Advanced Bots Creator is a comprehensive web application for creating, managing,
 - Inline notifications (no browser alerts)
 
 ## Recent Changes
-- **2025-11-06**: Mobile app-style navigation enhancement
-  - Created 17 unique custom SVG icons (exclusive to this app)
-  - Implemented mobile-style footer navigation with active states
-  - Added responsive design: footer nav on mobile (<992px), desktop nav on larger screens
-  - Integrated profile popup menu with outside-click and Escape key handling
-  - Replaced Font Awesome icons with custom SVG icons in navigation
-  - Enhanced mobile app-like user experience
+- **2025-11-06**: Mobile app-style enhancements and auto-login system
+  - **Homepage Footer Menu**: Transformed "Generate Login" and "Login" buttons into mobile app-style footer menu
+    - Fixed position at bottom with glassmorphism effect
+    - Custom SVG icons (icon-add for Generate Login, icon-profile for Login)
+    - Smooth hover animations and gradient highlights
+    - Consistent with mobile app conventions
+  - **Auto-Generate Login System**: Secure automatic account creation
+    - Cryptographically secure random credentials using `secrets` module
+    - Username format: AdjectiveNounNumber (e.g., SwiftBot1234)
+    - URL-safe secure password generation (16 characters)
+    - Modal displays credentials with copy-to-clipboard functionality
+    - Auto-login after account creation with session management
+    - Bounded retry logic (max 10 attempts) with proper error handling
+  - **Navigation Enhancement**: Mobile-style footer navigation with active states
+    - Created 17 unique custom SVG icons (exclusive to this app)
+    - Added responsive design: footer nav on mobile (<992px), desktop nav on larger screens
+    - Integrated profile popup menu with outside-click and Escape key handling
+    - Replaced Font Awesome icons with custom SVG icons in navigation
+    - Enhanced mobile app-like user experience
 
 - **2025-11-04**: Initial implementation with all core features
   - User authentication and bot management
