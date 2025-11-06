@@ -48,30 +48,7 @@ def index():
         return redirect(url_for('dashboard'))
     return render_template('index.html')
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        username = request.form.get('username', '').strip()
-        email = request.form.get('email', '').strip()
-        password = request.form.get('password', '')
-        
-        if not username or not email or not password:
-            return jsonify({'success': False, 'message': 'All fields are required'}), 400
-        
-        if len(password) < 6:
-            return jsonify({'success': False, 'message': 'Password must be at least 6 characters'}), 400
-        
-        password_hash = generate_password_hash(password)
-        user_id = create_user(username, email, password_hash)
-        
-        if user_id:
-            session['user_id'] = user_id
-            session['username'] = username
-            return jsonify({'success': True, 'redirect': url_for('dashboard')})
-        else:
-            return jsonify({'success': False, 'message': 'Username or email already exists'}), 400
-    
-    return render_template('login.html', register_mode=True)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

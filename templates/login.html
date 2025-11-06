@@ -1,31 +1,22 @@
 {% extends "base.html" %}
 
-{% block title %}{% if register_mode %}Register{% else %}Login{% endif %} - Advanced Bots Creator{% endblock %}
+{% block title %}Login - Advanced Bots Creator{% endblock %}
 
 {% block content %}
 <div class="auth-container">
     <div class="auth-card">
         <div class="text-center mb-4">
             <i class="fas fa-robot fa-4x text-gradient"></i>
-            <h2 class="mt-3">{% if register_mode %}Create Account{% else %}Welcome Back{% endif %}</h2>
+            <h2 class="mt-3">Welcome Back</h2>
         </div>
         
-        <form id="authForm" method="POST" action="{% if register_mode %}{{ url_for('register') }}{% else %}{{ url_for('login') }}{% endif %}">
+        <form id="authForm" method="POST" action="{{ url_for('login') }}">
             <div class="mb-3">
                 <label class="form-label">
                     <i class="fas fa-user"></i> Username
                 </label>
                 <input type="text" class="form-control" name="username" required>
             </div>
-            
-            {% if register_mode %}
-            <div class="mb-3">
-                <label class="form-label">
-                    <i class="fas fa-envelope"></i> Email
-                </label>
-                <input type="email" class="form-control" name="email" required>
-            </div>
-            {% endif %}
             
             <div class="mb-3">
                 <label class="form-label">
@@ -35,17 +26,13 @@
             </div>
             
             <button type="submit" class="btn btn-gradient w-100 mb-3">
-                <i class="fas fa-{% if register_mode %}user-plus{% else %}sign-in-alt{% endif %}"></i>
-                {% if register_mode %}Register{% else %}Login{% endif %}
+                <i class="fas fa-sign-in-alt"></i>
+                Login
             </button>
         </form>
         
         <div class="text-center">
-            {% if register_mode %}
-                <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
-            {% else %}
-                <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
-            {% endif %}
+            <p>Don't have an account? Use "Generate Login" on the <a href="{{ url_for('index') }}">home page</a></p>
         </div>
     </div>
 </div>
@@ -71,12 +58,12 @@ document.getElementById('authForm').addEventListener('submit', async (e) => {
         } else {
             showNotification(data.message, 'error');
             btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-{% if register_mode %}user-plus{% else %}sign-in-alt{% endif %}"></i> {% if register_mode %}Register{% else %}Login{% endif %}';
+            btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
         }
     } catch (error) {
         showNotification('An error occurred. Please try again.', 'error');
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-{% if register_mode %}user-plus{% else %}sign-in-alt{% endif %}"></i> {% if register_mode %}Register{% else %}Login{% endif %}';
+        btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
     }
 });
 </script>
