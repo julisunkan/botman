@@ -54,3 +54,24 @@ if ('serviceWorker' in navigator) {
             });
     });
 }
+
+document.addEventListener('click', function(event) {
+    const userMenu = document.getElementById('user-menu');
+    if (!userMenu) return;
+    
+    const isClickInsideMenu = userMenu.contains(event.target);
+    const isClickOnProfileButton = event.target.closest('.footer-nav-item[onclick*="user-menu"]');
+    
+    if (!isClickInsideMenu && !isClickOnProfileButton && userMenu.classList.contains('show')) {
+        userMenu.classList.remove('show');
+    }
+});
+
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        const userMenu = document.getElementById('user-menu');
+        if (userMenu && userMenu.classList.contains('show')) {
+            userMenu.classList.remove('show');
+        }
+    }
+});
