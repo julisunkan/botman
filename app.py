@@ -92,33 +92,34 @@ def login():
 
 @app.route('/generate-login', methods=['POST'])
 def generate_login():
-    adjectives = ['Swift', 'Bright', 'Bold', 'Clever', 'Swift', 'Noble', 'Cosmic', 'Digital', 'Cyber', 'Quantum']
+    adjectives = ['Swift', 'Bright', 'Bold', 'Clever', 'Noble', 'Cosmic', 'Digital', 'Cyber', 'Quantum', 'Elite']
     nouns = ['Bot', 'Creator', 'Builder', 'Master', 'Wizard', 'Engineer', 'Coder', 'Dev', 'Maker', 'Guru']
     
-    random_adjective = random.choice(adjectives)
-    random_noun = random.choice(nouns)
-    random_number = random.randint(100, 9999)
-    username = f"{random_adjective}{random_noun}{random_number}"
+    max_attempts = 10
+    for attempt in range(max_attempts):
+        random_adjective = secrets.choice(adjectives)
+        random_noun = secrets.choice(nouns)
+        random_number = secrets.randbelow(9000) + 1000
+        username = f"{random_adjective}{random_noun}{random_number}"
+        
+        password = secrets.token_urlsafe(16)
+        
+        email = f"{username.lower()}@botcreator.local"
+        
+        password_hash = generate_password_hash(password)
+        user_id = create_user(username, email, password_hash)
+        
+        if user_id:
+            session['user_id'] = user_id
+            session['username'] = username
+            return jsonify({
+                'success': True,
+                'username': username,
+                'password': password,
+                'redirect': url_for('dashboard')
+            })
     
-    password_chars = string.ascii_letters + string.digits
-    password = ''.join(random.choice(password_chars) for _ in range(12))
-    
-    email = f"{username.lower()}@botcreator.local"
-    
-    password_hash = generate_password_hash(password)
-    user_id = create_user(username, email, password_hash)
-    
-    if user_id:
-        session['user_id'] = user_id
-        session['username'] = username
-        return jsonify({
-            'success': True,
-            'username': username,
-            'password': password,
-            'redirect': url_for('dashboard')
-        })
-    else:
-        return generate_login()
+    return jsonify({'success': False, 'message': 'Failed to generate unique credentials. Please try again.'}), 500
 
 @app.route('/logout')
 def logout():
