@@ -1,54 +1,140 @@
+
 {% extends "base.html" %}
 
 {% block content %}
-<div class="hero-section text-center">
-    <div class="hero-content">
-        <h1 class="display-1 fw-bold mb-4">
-            <i class="fas fa-robot"></i> Advanced Bots Creator
-        </h1>
-        <p class="lead mb-5">Create powerful Telegram bots with AI, mining games, and payment integration</p>
+<div class="unique-hero-section">
+    <div class="animated-background">
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+        </div>
     </div>
     
-    <div class="features mt-5 pt-5">
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <i class="fas fa-brain fa-3x mb-3"></i>
-                    <h3>AI Integration</h3>
-                    <p>Powered by Google Gemini for intelligent conversations</p>
-                </div>
+    <div class="hero-content-wrapper">
+        <div class="hero-main">
+            <div class="robot-animation">
+                <svg viewBox="0 0 200 200" class="robot-svg">
+                    <defs>
+                        <linearGradient id="robotGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#9333ea;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <circle cx="100" cy="60" r="35" fill="url(#robotGradient)" class="robot-head"/>
+                    <rect x="75" y="100" width="50" height="60" rx="10" fill="url(#robotGradient)" class="robot-body"/>
+                    <circle cx="85" cy="50" r="8" fill="#fff" class="robot-eye"/>
+                    <circle cx="115" cy="50" r="8" fill="#fff" class="robot-eye"/>
+                    <circle cx="85" cy="50" r="4" fill="#0f172a" class="robot-pupil"/>
+                    <circle cx="115" cy="50" r="4" fill="#0f172a" class="robot-pupil"/>
+                    <rect x="55" y="110" width="15" height="40" rx="7" fill="url(#robotGradient)" class="robot-arm"/>
+                    <rect x="130" y="110" width="15" height="40" rx="7" fill="url(#robotGradient)" class="robot-arm"/>
+                </svg>
             </div>
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <i class="fas fa-gamepad fa-3x mb-3"></i>
-                    <h3>Tap-to-Earn Games</h3>
-                    <p>Create engaging mining games with rewards</p>
-                </div>
+            
+            <h1 class="glitch-text" data-text="BotForge Pro">
+                BotForge Pro
+            </h1>
+            
+            <div class="typing-container">
+                <p class="typing-text">Create • Deploy • Dominate</p>
             </div>
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <i class="fas fa-wallet fa-3x mb-3"></i>
-                    <h3>TON Payments</h3>
-                    <p>Accept payments via TON blockchain</p>
+            
+            <p class="hero-subtitle">
+                Next-generation Telegram bot platform with AI, blockchain, and gamification
+            </p>
+            
+            <div class="cta-buttons">
+                <button onclick="generateLogin()" class="cta-primary">
+                    <span class="button-content">
+                        <svg class="button-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                        <span>Generate Login</span>
+                    </span>
+                    <div class="button-glow"></div>
+                </button>
+                
+                <a href="{{ url_for('login') }}" class="cta-secondary">
+                    <span class="button-content">
+                        <svg class="button-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13.8 12H3"/>
+                        </svg>
+                        <span>Sign In</span>
+                    </span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="features-showcase">
+            <div class="feature-item" data-aos="fade-up" data-delay="100">
+                <div class="feature-icon-wrapper">
+                    <div class="icon-glow"></div>
+                    <svg class="feature-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                        <line x1="12" y1="22.08" x2="12" y2="12"/>
+                    </svg>
                 </div>
+                <h3>AI-Powered</h3>
+                <p>Google Gemini integration for smart conversations</p>
+            </div>
+            
+            <div class="feature-item" data-aos="fade-up" data-delay="200">
+                <div class="feature-icon-wrapper">
+                    <div class="icon-glow"></div>
+                    <svg class="feature-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
+                </div>
+                <h3>Tap-to-Earn</h3>
+                <p>Engaging gamification mechanics with rewards</p>
+            </div>
+            
+            <div class="feature-item" data-aos="fade-up" data-delay="300">
+                <div class="feature-icon-wrapper">
+                    <div class="icon-glow"></div>
+                    <svg class="feature-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                        <line x1="1" y1="10" x2="23" y2="10"/>
+                    </svg>
+                </div>
+                <h3>TON Blockchain</h3>
+                <p>Seamless cryptocurrency payment integration</p>
+            </div>
+            
+            <div class="feature-item" data-aos="fade-up" data-delay="400">
+                <div class="feature-icon-wrapper">
+                    <div class="icon-glow"></div>
+                    <svg class="feature-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                    </svg>
+                </div>
+                <h3>Real-Time Analytics</h3>
+                <p>Track engagement and user behavior instantly</p>
+            </div>
+        </div>
+        
+        <div class="stats-banner">
+            <div class="stat-item">
+                <div class="stat-number" data-target="1000">0</div>
+                <div class="stat-label">Active Bots</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="50000">0</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="99">0</div>
+                <div class="stat-label">Uptime %</div>
             </div>
         </div>
     </div>
-</div>
-
-<div class="homepage-footer-menu">
-    <button onclick="generateLogin()" class="footer-menu-item">
-        <svg class="footer-icon">
-            <use href="/static/icons/custom-icons.svg#icon-add"></use>
-        </svg>
-        <span class="footer-label">Generate Login</span>
-    </button>
-    <a href="{{ url_for('login') }}" class="footer-menu-item">
-        <svg class="footer-icon">
-            <use href="/static/icons/custom-icons.svg#icon-profile"></use>
-        </svg>
-        <span class="footer-label">Login</span>
-    </a>
 </div>
 
 <div class="modal fade" id="credentialsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
@@ -148,9 +234,456 @@ function copyToClipboard(elementId) {
 function continueToApp() {
     window.location.href = redirectUrl;
 }
+
+// Animate stats counter
+function animateStats() {
+    const statNumbers = document.querySelectorAll('.stat-number');
+    statNumbers.forEach(stat => {
+        const target = parseInt(stat.getAttribute('data-target'));
+        const duration = 2000;
+        const step = target / (duration / 16);
+        let current = 0;
+        
+        const timer = setInterval(() => {
+            current += step;
+            if (current >= target) {
+                stat.textContent = target.toLocaleString();
+                clearInterval(timer);
+            } else {
+                stat.textContent = Math.floor(current).toLocaleString();
+            }
+        }, 16);
+    });
+}
+
+// Animate features on scroll
+function initAOS() {
+    const features = document.querySelectorAll('[data-aos]');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const delay = entry.target.getAttribute('data-delay') || 0;
+                setTimeout(() => {
+                    entry.target.classList.add('aos-animate');
+                }, delay);
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    features.forEach(feature => observer.observe(feature));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    animateStats();
+    initAOS();
+});
 </script>
 
 <style>
+body {
+    overflow-x: hidden;
+}
+
+.unique-hero-section {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 0;
+}
+
+.animated-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.floating-shapes {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.3;
+    animation: float 20s infinite ease-in-out;
+}
+
+.shape-1 {
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(135deg, #9333ea, #ec4899);
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.shape-2 {
+    width: 250px;
+    height: 250px;
+    background: linear-gradient(135deg, #ec4899, #9333ea);
+    top: 60%;
+    right: 15%;
+    animation-delay: 2s;
+}
+
+.shape-3 {
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    bottom: 20%;
+    left: 20%;
+    animation-delay: 4s;
+}
+
+.shape-4 {
+    width: 180px;
+    height: 180px;
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+    top: 30%;
+    right: 30%;
+    animation-delay: 6s;
+}
+
+.shape-5 {
+    width: 220px;
+    height: 220px;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    bottom: 10%;
+    right: 10%;
+    animation-delay: 8s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(50px, 50px) rotate(90deg); }
+    50% { transform: translate(-30px, 80px) rotate(180deg); }
+    75% { transform: translate(-70px, -20px) rotate(270deg); }
+}
+
+.hero-content-wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    width: 100%;
+    padding: 0 2rem;
+}
+
+.hero-main {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.robot-animation {
+    margin: 0 auto 2rem;
+    width: 150px;
+    height: 150px;
+    animation: robotFloat 3s ease-in-out infinite;
+}
+
+.robot-svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 10px 30px rgba(147, 51, 234, 0.5));
+}
+
+.robot-head {
+    animation: robotHead 2s ease-in-out infinite;
+}
+
+.robot-eye {
+    animation: blink 4s infinite;
+}
+
+.robot-pupil {
+    animation: lookAround 5s infinite;
+}
+
+@keyframes robotFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+@keyframes robotHead {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-5deg); }
+    75% { transform: rotate(5deg); }
+}
+
+@keyframes blink {
+    0%, 45%, 55%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.1); }
+}
+
+@keyframes lookAround {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(3px); }
+    75% { transform: translateX(-3px); }
+}
+
+.glitch-text {
+    font-size: clamp(3rem, 8vw, 5rem);
+    font-weight: 900;
+    background: linear-gradient(135deg, #9333ea, #ec4899, #9333ea);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+    animation: gradientShift 3s ease infinite;
+    position: relative;
+    display: inline-block;
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.typing-container {
+    height: 40px;
+    margin-bottom: 1rem;
+}
+
+.typing-text {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ec4899;
+    overflow: hidden;
+    border-right: 3px solid #ec4899;
+    white-space: nowrap;
+    animation: typing 3.5s steps(40, end) infinite, blink-caret 0.75s step-end infinite;
+    display: inline-block;
+}
+
+@keyframes typing {
+    0%, 100% { width: 0; }
+    50%, 90% { width: 100%; }
+}
+
+@keyframes blink-caret {
+    0%, 100% { border-color: transparent; }
+    50% { border-color: #ec4899; }
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 2.5rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.cta-primary, .cta-secondary {
+    position: relative;
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+.cta-primary {
+    background: linear-gradient(135deg, #9333ea, #ec4899);
+    color: white;
+    box-shadow: 0 10px 30px rgba(147, 51, 234, 0.4);
+}
+
+.cta-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(147, 51, 234, 0.6);
+}
+
+.cta-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.cta-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-3px);
+    color: white;
+}
+
+.button-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+.button-icon {
+    transition: transform 0.3s ease;
+}
+
+.cta-primary:hover .button-icon,
+.cta-secondary:hover .button-icon {
+    transform: scale(1.2) rotate(5deg);
+}
+
+.button-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.cta-primary:hover .button-glow {
+    opacity: 1;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.2); opacity: 0.8; }
+}
+
+.features-showcase {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.feature-item {
+    background: rgba(30, 41, 59, 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.feature-item.aos-animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.feature-item:hover {
+    transform: translateY(-10px);
+    border-color: rgba(147, 51, 234, 0.6);
+    box-shadow: 0 20px 60px rgba(147, 51, 234, 0.4);
+}
+
+.feature-icon-wrapper {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+}
+
+.icon-glow {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #9333ea, #ec4899);
+    border-radius: 50%;
+    filter: blur(20px);
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.feature-item:hover .icon-glow {
+    opacity: 0.8;
+    animation: iconPulse 2s infinite;
+}
+
+@keyframes iconPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.feature-icon {
+    position: relative;
+    z-index: 1;
+    stroke: white;
+    transition: transform 0.3s ease;
+}
+
+.feature-item:hover .feature-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.feature-item h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, #9333ea, #ec4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.feature-item p {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.6;
+}
+
+.stats-banner {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: rgba(30, 41, 59, 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    border-radius: 20px;
+    padding: 2rem;
+    gap: 2rem;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #9333ea, #ec4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.stat-divider {
+    width: 2px;
+    height: 60px;
+    background: linear-gradient(180deg, transparent, rgba(147, 51, 234, 0.5), transparent);
+}
+
 .credential-box {
     background: rgba(15, 23, 42, 0.5);
     border-radius: 0.5rem;
@@ -162,58 +695,26 @@ function continueToApp() {
     font-weight: bold;
 }
 
-.homepage-footer-menu {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(15, 23, 42, 0.95);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid rgba(147, 51, 234, 0.3);
-    display: flex;
-    justify-content: space-around;
-    padding: 0.75rem 0;
-    z-index: 1000;
-    box-shadow: 0 -4px 20px rgba(147, 51, 234, 0.15);
-}
-
-.homepage-footer-menu .footer-menu-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.5rem 1.5rem;
-    color: rgba(255, 255, 255, 0.7);
-    text-decoration: none;
-    transition: all 0.3s ease;
-    background: none;
-    border: none;
-    cursor: pointer;
-    flex: 1;
-    max-width: 200px;
-}
-
-.homepage-footer-menu .footer-menu-item:hover {
-    color: #fff;
-    background: linear-gradient(135deg, rgba(147, 51, 234, 0.2), rgba(236, 72, 153, 0.2));
-    border-radius: 0.5rem;
-    transform: translateY(-2px);
-}
-
-.homepage-footer-menu .footer-icon {
-    width: 28px;
-    height: 28px;
-    stroke-width: 1.5;
-}
-
-.homepage-footer-menu .footer-label {
-    font-size: 0.75rem;
-    font-weight: 500;
-    text-align: center;
-}
-
-body {
-    padding-bottom: 80px;
+@media (max-width: 768px) {
+    .stats-banner {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .stat-divider {
+        width: 60px;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(147, 51, 234, 0.5), transparent);
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+    }
+    
+    .cta-primary, .cta-secondary {
+        width: 100%;
+        justify-content: center;
+    }
 }
 </style>
 {% endblock %}
