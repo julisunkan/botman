@@ -25,3 +25,9 @@ gunicorn
 Pillow
 requests
 Werkzeug
+cryptography
+Flask
+google-generativeai
+gunicorn
+requests
+Werkzeug
